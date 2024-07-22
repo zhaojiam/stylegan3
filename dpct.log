@@ -1,0 +1,452 @@
+error: unknown argument: '--generate-dependencies-with-compile'
+error: unknown argument: '--allow-unsupported-compiler'
+warning: CUDA version is newer than the latest supported version 12.4 [-Wunknown-cuda-version]
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu:9:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:111:42: error: static declaration of 'copy_filters' follows non-static declaration
+  111 | template <bool, bool> static cudaError_t copy_filters(cudaStream_t stream)
+      |                                          ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h:88:54: note: previous declaration is here
+   88 | template <bool signWrite, bool signRead> cudaError_t copy_filters(cudaStream_t stream);
+      |                                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu:27:22: error: explicit instantiation of undefined function template 'copy_filters'
+   27 | template cudaError_t copy_filters<false, true>(cudaStream_t stream);
+      |                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h:88:54: note: explicit instantiation refers here
+   88 | template <bool signWrite, bool signRead> cudaError_t copy_filters(cudaStream_t stream);
+      |                                                      ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:13:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/class.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../attr.h:14:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../cast.h:15:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/type_caster_base.h:15:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:465:76: error: expected ')'
+  465 |     return reinterpret_borrow<object>(dict_getitemstring(state_dict.ptr(), PYBIND11_INTERNALS_ID));
+      |                                                                            ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:321:33: note: expanded from macro 'PYBIND11_INTERNALS_ID'
+  321 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:465:57: note: to match this '('
+  465 |     return reinterpret_borrow<object>(dict_getitemstring(state_dict.ptr(), PYBIND11_INTERNALS_ID));
+      |                                                         ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:540:20: error: expected ']'
+  540 |         state_dict[PYBIND11_INTERNALS_ID] = capsule(internals_pp);
+      |                    ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:321:33: note: expanded from macro 'PYBIND11_INTERNALS_ID'
+  321 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:540:19: note: to match this '['
+  540 |         state_dict[PYBIND11_INTERNALS_ID] = capsule(internals_pp);
+      |                   ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:13:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/class.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../attr.h:14:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../cast.h:15:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/type_caster_base.h:690:37: error: expected ';' at end of declaration
+  690 |         constexpr auto *local_key = PYBIND11_MODULE_LOCAL_ID;
+      |                                     ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:326:33: note: expanded from macro 'PYBIND11_MODULE_LOCAL_ID'
+  326 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:1419:28: error: expected ')'
+ 1419 |             setattr(m_ptr, PYBIND11_MODULE_LOCAL_ID, capsule(tinfo));
+      |                            ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:326:33: note: expanded from macro 'PYBIND11_MODULE_LOCAL_ID'
+  326 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:1419:20: note: to match this '('
+ 1419 |             setattr(m_ptr, PYBIND11_MODULE_LOCAL_ID, capsule(tinfo));
+      |                    ^
+error: unknown argument: '--generate-dependencies-with-compile'
+error: unknown argument: '--allow-unsupported-compiler'
+warning: CUDA version is newer than the latest supported version 12.4 [-Wunknown-cuda-version]
+error: unknown argument: '--generate-dependencies-with-compile'
+error: unknown argument: '--allow-unsupported-compiler'
+warning: CUDA version is newer than the latest supported version 12.4 [-Wunknown-cuda-version]
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_ns.cu:9:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:111:42: error: static declaration of 'copy_filters' follows non-static declaration
+  111 | template <bool, bool> static cudaError_t copy_filters(cudaStream_t stream)
+      |                                          ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h:88:54: note: previous declaration is here
+   88 | template <bool signWrite, bool signRead> cudaError_t copy_filters(cudaStream_t stream);
+      |                                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_ns.cu:27:22: error: explicit instantiation of undefined function template 'copy_filters'
+   27 | template cudaError_t copy_filters<false, false>(cudaStream_t stream);
+      |                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h:88:54: note: explicit instantiation refers here
+   88 | template <bool signWrite, bool signRead> cudaError_t copy_filters(cudaStream_t stream);
+      |                                                      ^
+error: unknown argument: '--generate-dependencies-with-compile'
+error: unknown argument: '--allow-unsupported-compiler'
+warning: CUDA version is newer than the latest supported version 12.4 [-Wunknown-cuda-version]
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:13:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/class.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../attr.h:14:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../cast.h:15:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/type_caster_base.h:15:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:465:76: error: expected ')'
+  465 |     return reinterpret_borrow<object>(dict_getitemstring(state_dict.ptr(), PYBIND11_INTERNALS_ID));
+      |                                                                            ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:321:33: note: expanded from macro 'PYBIND11_INTERNALS_ID'
+  321 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:465:57: note: to match this '('
+  465 |     return reinterpret_borrow<object>(dict_getitemstring(state_dict.ptr(), PYBIND11_INTERNALS_ID));
+      |                                                         ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:540:20: error: expected ']'
+  540 |         state_dict[PYBIND11_INTERNALS_ID] = capsule(internals_pp);
+      |                    ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:321:33: note: expanded from macro 'PYBIND11_INTERNALS_ID'
+  321 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:540:19: note: to match this '['
+  540 |         state_dict[PYBIND11_INTERNALS_ID] = capsule(internals_pp);
+      |                   ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:13:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/class.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../attr.h:14:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../cast.h:15:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/type_caster_base.h:690:37: error: expected ';' at end of declaration
+  690 |         constexpr auto *local_key = PYBIND11_MODULE_LOCAL_ID;
+      |                                     ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:326:33: note: expanded from macro 'PYBIND11_MODULE_LOCAL_ID'
+  326 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:1419:28: error: expected ')'
+ 1419 |             setattr(m_ptr, PYBIND11_MODULE_LOCAL_ID, capsule(tinfo));
+      |                            ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:326:33: note: expanded from macro 'PYBIND11_MODULE_LOCAL_ID'
+  326 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:1419:20: note: to match this '('
+ 1419 |             setattr(m_ptr, PYBIND11_MODULE_LOCAL_ID, capsule(tinfo));
+      |                    ^
+error: unknown argument: '--generate-dependencies-with-compile'
+error: unknown argument: '--allow-unsupported-compiler'
+warning: CUDA version is newer than the latest supported version 12.4 [-Wunknown-cuda-version]
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_wr.cu:9:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:111:42: error: static declaration of 'copy_filters' follows non-static declaration
+  111 | template <bool, bool> static cudaError_t copy_filters(cudaStream_t stream)
+      |                                          ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h:88:54: note: previous declaration is here
+   88 | template <bool signWrite, bool signRead> cudaError_t copy_filters(cudaStream_t stream);
+      |                                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_wr.cu:27:22: error: explicit instantiation of undefined function template 'copy_filters'
+   27 | template cudaError_t copy_filters<true, false>(cudaStream_t stream);
+      |                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h:88:54: note: explicit instantiation refers here
+   88 | template <bool signWrite, bool signRead> cudaError_t copy_filters(cudaStream_t stream);
+      |                                                      ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:13:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/class.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../attr.h:14:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../cast.h:15:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/type_caster_base.h:15:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:465:76: error: expected ')'
+  465 |     return reinterpret_borrow<object>(dict_getitemstring(state_dict.ptr(), PYBIND11_INTERNALS_ID));
+      |                                                                            ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:321:33: note: expanded from macro 'PYBIND11_INTERNALS_ID'
+  321 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:465:57: note: to match this '('
+  465 |     return reinterpret_borrow<object>(dict_getitemstring(state_dict.ptr(), PYBIND11_INTERNALS_ID));
+      |                                                         ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:540:20: error: expected ']'
+  540 |         state_dict[PYBIND11_INTERNALS_ID] = capsule(internals_pp);
+      |                    ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:321:33: note: expanded from macro 'PYBIND11_INTERNALS_ID'
+  321 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:540:19: note: to match this '['
+  540 |         state_dict[PYBIND11_INTERNALS_ID] = capsule(internals_pp);
+      |                   ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:13:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/class.h:12:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../attr.h:14:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../cast.h:15:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/type_caster_base.h:690:37: error: expected ';' at end of declaration
+  690 |         constexpr auto *local_key = PYBIND11_MODULE_LOCAL_ID;
+      |                                     ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:326:33: note: expanded from macro 'PYBIND11_MODULE_LOCAL_ID'
+  326 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/extension.h:9:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include/torch/python.h:11:
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/Exceptions.h:12:
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:1419:28: error: expected ')'
+ 1419 |             setattr(m_ptr, PYBIND11_MODULE_LOCAL_ID, capsule(tinfo));
+      |                            ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/detail/../detail/internals.h:326:33: note: expanded from macro 'PYBIND11_MODULE_LOCAL_ID'
+  326 |         PYBIND11_INTERNALS_KIND PYBIND11_COMPILER_TYPE PYBIND11_STDLIB PYBIND11_BUILD_ABI         \
+      |                                 ^
+<command line>:4:32: note: expanded from macro 'PYBIND11_COMPILER_TYPE'
+    4 | #define PYBIND11_COMPILER_TYPE \_gcc\\
+      |                                ^
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/pybind11/pybind11.h:1419:20: note: to match this '('
+ 1419 |             setattr(m_ptr, PYBIND11_MODULE_LOCAL_ID, capsule(tinfo));
+      |                    ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu:9:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:140:1: warning: DPCT1110:0: The total declared local variable size in device function filtered_lrelu_kernel exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.
+  140 | static __global__ void filtered_lrelu_kernel(filtered_lrelu_kernel_params p)
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:273:13: warning: DPCT1118:1: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  273 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:302:13: warning: DPCT1118:2: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  302 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:407:13: warning: DPCT1118:3: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  407 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:512:38: warning: DPCT1108:4: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  512 |                                 s |= __shfl_xor_sync(groupMask, s, 1);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:513:38: warning: DPCT1108:5: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  513 |                                 s |= __shfl_xor_sync(groupMask, s, 2);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:543:38: warning: DPCT1108:6: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  543 |                                 s |= __shfl_xor_sync(groupMask, s, 1);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:544:38: warning: DPCT1108:7: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  544 |                                 s |= __shfl_xor_sync(groupMask, s, 2);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:650:38: warning: DPCT1108:8: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  650 |                                 s |= __shfl_xor_sync(groupMask, s, 1);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:651:38: warning: DPCT1108:9: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  651 |                                 s |= __shfl_xor_sync(groupMask, s, 2);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:673:38: warning: DPCT1108:10: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  673 |                                 s |= __shfl_xor_sync(groupMask, s, 1);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:674:38: warning: DPCT1108:11: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  674 |                                 s |= __shfl_xor_sync(groupMask, s, 2);
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:730:17: warning: DPCT1118:12: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  730 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:862:17: warning: DPCT1118:13: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  862 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:899:38: warning: DPCT1108:14: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  899 |                                 s += __shfl_xor_sync(groupMask, s, 1);  // Coalesce.
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:900:38: warning: DPCT1108:15: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  900 |                                 s += __shfl_xor_sync(groupMask, s, 2);  // Coalesce.
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:921:38: warning: DPCT1108:16: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  921 |                                 s += __shfl_xor_sync(groupMask, s, 1);  // Coalesce.
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:922:38: warning: DPCT1108:17: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+  922 |                                 s += __shfl_xor_sync(groupMask, s, 2);  // Coalesce.
+      |                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:962:13: warning: DPCT1118:18: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  962 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1025:13: warning: DPCT1118:19: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+ 1025 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1050:17: warning: DPCT1118:20: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+ 1050 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1081:17: warning: DPCT1118:21: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+ 1081 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1153:18: warning: DPCT1108:22: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+ 1153 |             s |= __shfl_xor_sync(m, s, 1); // Distribute.
+      |                  ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1154:18: warning: DPCT1108:23: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+ 1154 |             s |= __shfl_xor_sync(m, s, 2);
+      |                  ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1155:18: warning: DPCT1108:24: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+ 1155 |             s |= __shfl_xor_sync(m, s, 4);
+      |                  ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1156:18: warning: DPCT1108:25: '__shfl_xor_sync' was migrated with the experimental feature masked sub_group function which may not be supported by all compilers or runtimes. You may need to adjust the code.
+ 1156 |             s |= __shfl_xor_sync(m, s, 8);
+      |                  ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1106:1: warning: DPCT1110:26: The total declared local variable size in device function filtered_lrelu_act_kernel exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.
+ 1106 | static __global__ void filtered_lrelu_act_kernel(filtered_lrelu_act_kernel_params p)
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp:88:19: warning: DPCT1049:27: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.
+   88 |     AT_CUDA_CHECK(cudaLaunchKernel(kernel, gridSize, blockSize, args, 0, at::cuda::getCurrentCUDAStream()));
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp:88:19: warning: DPCT1123:28: The kernel function pointer cannot be used in the device code. You need to call the kernel function with the correct argument(s) directly. According to the kernel function definition, adjusting the dimension of the sycl::nd_item may also be required.
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cu:24:1: warning: DPCT1110:29: The total declared local variable size in device function bias_act_kernel exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.
+   24 | __global__ void bias_act_kernel(bias_act_kernel_params p)
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu:98:1: warning: DPCT1110:30: The total declared local variable size in device function upfirdn2d_kernel_small exceeds 128 bytes and may cause high register pressure. Consult with your hardware vendor to find the total register size available and adjust the code, or use smaller sub-group size to avoid high register pressure.
+   98 | static __global__ void upfirdn2d_kernel_small(upfirdn2d_kernel_params p)
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu:145:13: warning: DPCT1118:31: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  145 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu:163:13: warning: DPCT1118:32: SYCL group functions and algorithms must be encountered in converged control flow. You may need to adjust the code.
+  163 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:185:19: warning: DPCT1049:33: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.
+  185 |     AT_CUDA_CHECK(cudaLaunchKernel(spec.setup, 1, 1024, args, 0, at::cuda::getCurrentCUDAStream()));
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:185:19: warning: DPCT1123:34: The kernel function pointer cannot be used in the device code. You need to call the kernel function with the correct argument(s) directly. According to the kernel function definition, adjusting the dimension of the sycl::nd_item may also be required.
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:204:23: warning: DPCT1049:35: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.
+  204 |         AT_CUDA_CHECK(cudaLaunchKernel(spec.exec, dim3(gx, gy, subGz), bx, args, spec.dynamicSharedKB << 10, at::cuda::getCurrentCUDAStream()));
+      |                       ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:204:23: warning: DPCT1123:36: The kernel function pointer cannot be used in the device code. You need to call the kernel function with the correct argument(s) directly. According to the kernel function definition, adjusting the dimension of the sycl::nd_item may also be required.
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:288:19: warning: DPCT1049:37: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.
+  288 |     AT_CUDA_CHECK(cudaLaunchKernel(func, dim3(gx, gy, gz), bx, args, 0, at::cuda::getCurrentCUDAStream()));
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:288:19: warning: DPCT1123:38: The kernel function pointer cannot be used in the device code. You need to call the kernel function with the correct argument(s) directly. According to the kernel function definition, adjusting the dimension of the sycl::nd_item may also be required.
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp:96:19: warning: DPCT1049:39: The work-group size passed to the SYCL kernel may exceed the limit. To get the device limit, query info::device::max_work_group_size. Adjust the work-group size if needed.
+   96 |     AT_CUDA_CHECK(cudaLaunchKernel(spec.kernel, gridSize, blockSize, args, 0, at::cuda::getCurrentCUDAStream()));
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp:96:19: warning: DPCT1123:40: The kernel function pointer cannot be used in the device code. You need to call the kernel function with the correct argument(s) directly. According to the kernel function definition, adjusting the dimension of the sycl::nd_item may also be required.
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu:9:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:115:14: warning: DPCT1001:41: The statement could not be removed.
+  115 |     if (err) return err;
+      |              ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:115:5: warning: DPCT1000:42: Error handling if-stmt was detected but could not be rewritten.
+  115 |     if (err) return err;
+      |     ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:273:13: warning: DPCT1065:43: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  273 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:302:13: warning: DPCT1065:44: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  302 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:407:13: warning: DPCT1065:45: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  407 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:730:17: warning: DPCT1065:46: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  730 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:862:17: warning: DPCT1065:47: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  862 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:962:13: warning: DPCT1065:48: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  962 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1025:13: warning: DPCT1065:49: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+ 1025 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1050:17: warning: DPCT1065:50: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+ 1050 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1081:17: warning: DPCT1065:51: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+ 1081 |                 __syncthreads();
+      |                 ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1141:21: warning: DPCT1064:52: Migrated fabsf call is used in a macro/template definition and may not be valid for all macro/template uses. Adjust the code.
+ 1141 |                 if (fabsf(v) > p.clamp)
+      |                     ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cu:1205:21: warning: DPCT1064:53: Migrated fabsf call is used in a macro/template definition and may not be valid for all macro/template uses. Adjust the code.
+ 1205 |                 if (fabsf(v) > p.clamp)
+      |                     ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu:145:13: warning: DPCT1065:54: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  145 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu:163:13: warning: DPCT1065:55: Consider replacing sycl::nd_item::barrier() with sycl::nd_item::barrier(sycl::access::fence_space::local_space) for better performance if there is no access to global memory.
+  163 |             __syncthreads();
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:193:19: warning: DPCT1027:56: The call to cudaFuncSetCacheConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.
+  193 |     AT_CUDA_CHECK(cudaFuncSetCacheConfig(spec.exec, cudaFuncCachePreferShared));
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:195:23: warning: DPCT1027:57: The call to cudaFuncSetAttribute was replaced with 0 because SYCL currently does not support corresponding setting.
+  195 |         AT_CUDA_CHECK(cudaFuncSetAttribute(spec.exec, cudaFuncAttributeMaxDynamicSharedMemorySize, spec.dynamicSharedKB << 10));
+      |                       ^
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:196:19: warning: DPCT1027:58: The call to cudaFuncSetSharedMemConfig was replaced with 0 because SYCL currently does not support configuring shared memory on devices.
+  196 |     AT_CUDA_CHECK(cudaFuncSetSharedMemConfig(spec.exec, cudaSharedMemBankSizeFourByte));
+      |                   ^
+Saved new version of /export/users/zhaojiam/proj/stylegan3/torch_utils/ops_dpct/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.h.yaml file
+Saved new version of /export/users/zhaojiam/proj/stylegan3/torch_utils/ops_dpct/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h.yaml file
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cu
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_ns.cu
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_wr.cu
+Parsing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cu
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_ns.cu
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_wr.cu
+Analyzing: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cu
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_ns.cu
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_wr.cu
+Migrating: /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp
+Processed 11 file(s) in -in-root folder "/export/users/zhaojiam/.cache/torch_extensions/py39_cu118"
+
+See Diagnostics Reference t
+o resolve warnings and complete the migration:
+https://www.intel.com/content/www/us/en/docs/dpcpp-compatibility-tool/developer-guide-reference/current/diagnostics-reference.html

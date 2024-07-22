@@ -1,0 +1,163 @@
+---
+MainSourceFile:  '/export/users/zhaojiam/proj/stylegan3/torch_utils/ops_dpct/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+Replacements:
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          447
+    Length:          26
+    ReplacementText: "#include <sycl/sycl.hpp>\n#include <dpct/dpct.hpp>\n"
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          684
+    Length:          4
+    ReplacementText: 'sycl::int2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          708
+    Length:          4
+    ReplacementText: 'sycl::int2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          734
+    Length:          4
+    ReplacementText: 'sycl::int2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          813
+    Length:          4
+    ReplacementText: 'sycl::int4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          884
+    Length:          4
+    ReplacementText: 'sycl::int4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          914
+    Length:          4
+    ReplacementText: 'sycl::int2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          969
+    Length:          4
+    ReplacementText: 'sycl::int2'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          1003
+    Length:          4
+    ReplacementText: 'sycl::int4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+  - FilePath:        '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Offset:          1074
+    Length:          4
+    ReplacementText: 'sycl::int4'
+    ConstantFlag:    ''
+    ConstantOffset:  0
+    InitStr:         ''
+    NewHostVarName:  ''
+    BlockLevelFormatFlag: false
+MainSourceFilesDigest:
+  - MainSourceFile:  '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.h'
+    Digest:          b16ac25891905d7226a376ffea886310
+DpctVersion:     2025.0.0
+MainHelperFileName: ''
+USMLevel:        ''
+FeatureMap:      {}
+CompileTargets:  {}
+OptionMap:
+  AnalysisScopePath:
+    Value:           '/export/users/zhaojiam/.cache/torch_extensions/py39_cu118'
+    Specified:       false
+  AsyncHandler:
+    Value:           'false'
+    Specified:       false
+  BuildScript:
+    Value:           '0'
+    Specified:       false
+  CodePinEnabled:
+    Value:           'false'
+    Specified:       false
+  CommentsEnabled:
+    Value:           'false'
+    Specified:       false
+  CompilationsDir:
+    Value:           '/export/users/zhaojiam/proj/stylegan3'
+    Specified:       true
+  CtadEnabled:
+    Value:           'false'
+    Specified:       false
+  EnablepProfiling:
+    Value:           'false'
+    Specified:       false
+  ExperimentalFlag:
+    Value:           '32'
+    Specified:       true
+  ExplicitNamespace:
+    Value:           '20'
+    Specified:       false
+  ExtensionDDFlag:
+    Value:           '0'
+    Specified:       false
+  ExtensionDEFlag:
+    Value:           '4294967295'
+    Specified:       false
+  HelperFuncPreferenceFlag:
+    Value:           '0'
+    Specified:       false
+  NDRangeDim:
+    Value:           '3'
+    Specified:       false
+  NoDRYPattern:
+    Value:           'false'
+    Specified:       false
+  OptimizeMigration:
+    Value:           'false'
+    Specified:       false
+  ProcessAll:
+    Value:           'false'
+    Specified:       false
+  RuleFile:
+    Value:           ''
+    Specified:       false
+  SyclNamedLambda:
+    Value:           'false'
+    Specified:       false
+  UsmLevel:
+    Value:           '1'
+    Specified:       false
+...

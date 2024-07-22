@@ -1,0 +1,326 @@
+
+Training options:
+{
+  "G_kwargs": {
+    "class_name": "training.networks_stylegan3.Generator",
+    "z_dim": 512,
+    "w_dim": 512,
+    "mapping_kwargs": {
+      "num_layers": 2
+    },
+    "channel_base": 32768,
+    "channel_max": 512,
+    "magnitude_ema_beta": 0.9998613801725043
+  },
+  "D_kwargs": {
+    "class_name": "training.networks_stylegan2.Discriminator",
+    "block_kwargs": {
+      "freeze_layers": 0
+    },
+    "mapping_kwargs": {},
+    "epilogue_kwargs": {
+      "mbstd_group_size": 4
+    },
+    "channel_base": 32768,
+    "channel_max": 512
+  },
+  "G_opt_kwargs": {
+    "class_name": "torch.optim.Adam",
+    "betas": [
+      0,
+      0.99
+    ],
+    "eps": 1e-08,
+    "lr": 0.0025
+  },
+  "D_opt_kwargs": {
+    "class_name": "torch.optim.Adam",
+    "betas": [
+      0,
+      0.99
+    ],
+    "eps": 1e-08,
+    "lr": 0.002
+  },
+  "loss_kwargs": {
+    "class_name": "training.loss.StyleGAN2Loss",
+    "r1_gamma": 8.2
+  },
+  "data_loader_kwargs": {
+    "pin_memory": true,
+    "prefetch_factor": 2,
+    "num_workers": 3
+  },
+  "training_set_kwargs": {
+    "class_name": "training.dataset.ImageFolderDataset",
+    "path": "/export/users/zhaojiam/datasets/metfaces-1024x1024.zip",
+    "use_labels": false,
+    "max_size": 1336,
+    "xflip": false,
+    "resolution": 1024,
+    "random_seed": 0
+  },
+  "num_gpus": 1,
+  "batch_size": 4,
+  "batch_gpu": 4,
+  "metrics": [],
+  "total_kimg": 1,
+  "kimg_per_tick": 4,
+  "image_snapshot_ticks": 50,
+  "network_snapshot_ticks": 50,
+  "random_seed": 0,
+  "ema_kimg": 1.25,
+  "augment_kwargs": {
+    "class_name": "training.augment.AugmentPipe",
+    "xflip": 1,
+    "rotate90": 1,
+    "xint": 1,
+    "scale": 1,
+    "rotate": 1,
+    "aniso": 1,
+    "xfrac": 1,
+    "brightness": 1,
+    "contrast": 1,
+    "lumaflip": 1,
+    "hue": 1,
+    "saturation": 1
+  },
+  "ada_target": 0.6,
+  "run_dir": "./training-runs/00002-stylegan3-t-metfaces-1024x1024-gpus1-batch4-gamma8.2"
+}
+
+Output directory:    ./training-runs/00002-stylegan3-t-metfaces-1024x1024-gpus1-batch4-gamma8.2
+Number of GPUs:      1
+Batch size:          4 images
+Training duration:   1 kimg
+Dataset path:        /export/users/zhaojiam/datasets/metfaces-1024x1024.zip
+Dataset size:        1336 images
+Dataset resolution:  1024
+Dataset labels:      False
+Dataset x-flips:     False
+
+Creating output directory...
+Launching processes...
+Loading training set...
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/utils/data/sampler.py:64: UserWarning: `data_source` argument is not used and will be removed in 2.2.0.You may still have custom implementation that utilizes it.
+  warnings.warn("`data_source` argument is not used and will be removed in 2.2.0."
+
+Num images:  1336
+Image shape: [3, 1024, 1024]
+Label shape: [0]
+
+Constructing networks...
+Setting up PyTorch plugin "bias_act_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py39_cu118 as PyTorch extensions root...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/build.ninja...
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/utils/cpp_extension.py:1967: UserWarning: TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'].
+  warnings.warn(
+Building extension module bias_act_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/3] /usr/local/cuda-12.5/bin/nvcc --generate-dependencies-with-compile --dependency-output bias_act.cuda.o.d -DTORCH_EXTENSION_NAME=bias_act_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_61,code=compute_61 -gencode=arch=compute_61,code=sm_61 --compiler-options '-fPIC' --use_fast_math --allow-unsupported-compiler -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cu -o bias_act.cuda.o 
+[2/3] c++ -MMD -MF bias_act.o.d -DTORCH_EXTENSION_NAME=bias_act_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/bias_act_plugin/3cb576a0039689487cfba59279dd6d46-nvidia-geforce-gtx-1060-6gb/bias_act.cpp -o bias_act.o 
+[3/3] c++ bias_act.o bias_act.cuda.o -shared -L/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda-12.5/lib64 -lcudart -o bias_act_plugin.so
+Loading extension module bias_act_plugin...
+Done setting up PyTorch plugin "bias_act_plugin".
+Setting up PyTorch plugin "filtered_lrelu_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py39_cu118 as PyTorch extensions root...
+Creating extension directory /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/build.ninja...
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/utils/cpp_extension.py:1967: UserWarning: TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'].
+  warnings.warn(
+Building extension module filtered_lrelu_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/5] c++ -MMD -MF filtered_lrelu.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp -o filtered_lrelu.o 
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/c10/cuda/CUDAFunctions.h:12,
+                 from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContextLight.h:25,
+                 from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContext.h:3,
+                 from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:10:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp: In function ‘std::tuple<at::Tensor, at::Tensor, int> filtered_lrelu(at::Tensor, at::Tensor, at::Tensor, at::Tensor, at::Tensor, int, int, int, int, int, int, int, int, float, float, float, bool, bool)’:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:196:86: warning: ‘cudaError_t cudaFuncSetSharedMemConfig(const void*, cudaSharedMemConfig)’ is deprecated [-Wdeprecated-declarations]
+  196 |     AT_CUDA_CHECK(cudaFuncSetSharedMemConfig(spec.exec, cudaSharedMemBankSizeFourByte));
+      |                                                                                      ^
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContextLight.h:6,
+                 from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContext.h:3,
+                 from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:10:
+/usr/local/cuda-12.5/include/cuda_runtime_api.h:5006:57: note: declared here
+ 5006 | extern __CUDA_DEPRECATED __host__ cudaError_t CUDARTAPI cudaFuncSetSharedMemConfig(const void *func, enum cudaSharedMemConfig config);
+      |                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/c10/cuda/CUDAFunctions.h:12,
+                 from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContextLight.h:25,
+                 from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContext.h:3,
+                 from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:10:
+/export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:196:86: warning: ‘cudaError_t cudaFuncSetSharedMemConfig(const void*, cudaSharedMemConfig)’ is deprecated [-Wdeprecated-declarations]
+  196 |     AT_CUDA_CHECK(cudaFuncSetSharedMemConfig(spec.exec, cudaSharedMemBankSizeFourByte));
+      |                                                                                      ^
+In file included from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContextLight.h:6,
+                 from /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/ATen/cuda/CUDAContext.h:3,
+                 from /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu.cpp:10:
+/usr/local/cuda-12.5/include/cuda_runtime_api.h:5006:57: note: declared here
+ 5006 | extern __CUDA_DEPRECATED __host__ cudaError_t CUDARTAPI cudaFuncSetSharedMemConfig(const void *func, enum cudaSharedMemConfig config);
+      |                                                         ^~~~~~~~~~~~~~~~~~~~~~~~~~
+[2/5] /usr/local/cuda-12.5/bin/nvcc --generate-dependencies-with-compile --dependency-output filtered_lrelu_ns.cuda.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_61,code=compute_61 -gencode=arch=compute_61,code=sm_61 --compiler-options '-fPIC' --use_fast_math --allow-unsupported-compiler -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_ns.cu -o filtered_lrelu_ns.cuda.o 
+[3/5] /usr/local/cuda-12.5/bin/nvcc --generate-dependencies-with-compile --dependency-output filtered_lrelu_rd.cuda.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_61,code=compute_61 -gencode=arch=compute_61,code=sm_61 --compiler-options '-fPIC' --use_fast_math --allow-unsupported-compiler -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_rd.cu -o filtered_lrelu_rd.cuda.o 
+[4/5] /usr/local/cuda-12.5/bin/nvcc --generate-dependencies-with-compile --dependency-output filtered_lrelu_wr.cuda.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_61,code=compute_61 -gencode=arch=compute_61,code=sm_61 --compiler-options '-fPIC' --use_fast_math --allow-unsupported-compiler -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/filtered_lrelu_plugin/2e9606d7cf844ec44b9f500eaacd35c0-nvidia-geforce-gtx-1060-6gb/filtered_lrelu_wr.cu -o filtered_lrelu_wr.cuda.o 
+[5/5] c++ filtered_lrelu.o filtered_lrelu_wr.cuda.o filtered_lrelu_rd.cuda.o filtered_lrelu_ns.cuda.o -shared -L/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda-12.5/lib64 -lcudart -o filtered_lrelu_plugin.so
+Loading extension module filtered_lrelu_plugin...
+Done setting up PyTorch plugin "filtered_lrelu_plugin".
+
+Generator                     Parameters  Buffers  Output shape         Datatype
+---                           ---         ---      ---                  ---     
+mapping.fc0                   262656      -        [4, 512]             float32 
+mapping.fc1                   262656      -        [4, 512]             float32 
+mapping                       -           512      [4, 16, 512]         float32 
+synthesis.input.affine        2052        -        [4, 4]               float32 
+synthesis.input               262144      1545     [4, 512, 36, 36]     float32 
+synthesis.L0_36_512.affine    262656      -        [4, 512]             float32 
+synthesis.L0_36_512           2359808     25       [4, 512, 36, 36]     float32 
+synthesis.L1_36_512.affine    262656      -        [4, 512]             float32 
+synthesis.L1_36_512           2359808     25       [4, 512, 36, 36]     float32 
+synthesis.L2_52_512.affine    262656      -        [4, 512]             float32 
+synthesis.L2_52_512           2359808     37       [4, 512, 52, 52]     float32 
+synthesis.L3_52_512.affine    262656      -        [4, 512]             float32 
+synthesis.L3_52_512           2359808     25       [4, 512, 52, 52]     float32 
+synthesis.L4_84_512.affine    262656      -        [4, 512]             float32 
+synthesis.L4_84_512           2359808     37       [4, 512, 84, 84]     float32 
+synthesis.L5_148_512.affine   262656      -        [4, 512]             float32 
+synthesis.L5_148_512          2359808     37       [4, 512, 148, 148]   float16 
+synthesis.L6_148_512.affine   262656      -        [4, 512]             float32 
+synthesis.L6_148_512          2359808     25       [4, 512, 148, 148]   float16 
+synthesis.L7_276_323.affine   262656      -        [4, 512]             float32 
+synthesis.L7_276_323          1488707     37       [4, 323, 276, 276]   float16 
+synthesis.L8_276_203.affine   165699      -        [4, 323]             float32 
+synthesis.L8_276_203          590324      25       [4, 203, 276, 276]   float16 
+synthesis.L9_532_128.affine   104139      -        [4, 203]             float32 
+synthesis.L9_532_128          233984      37       [4, 128, 532, 532]   float16 
+synthesis.L10_1044_81.affine  65664       -        [4, 128]             float32 
+synthesis.L10_1044_81         93393       37       [4, 81, 1044, 1044]  float16 
+synthesis.L11_1044_51.affine  41553       -        [4, 81]              float32 
+synthesis.L11_1044_51         37230       25       [4, 51, 1044, 1044]  float16 
+synthesis.L12_1044_32.affine  26163       -        [4, 51]              float32 
+synthesis.L12_1044_32         14720       25       [4, 32, 1044, 1044]  float16 
+synthesis.L13_1024_32.affine  16416       -        [4, 32]              float32 
+synthesis.L13_1024_32         9248        25       [4, 32, 1024, 1024]  float16 
+synthesis.L14_1024_3.affine   16416       -        [4, 32]              float32 
+synthesis.L14_1024_3          99          1        [4, 3, 1024, 1024]   float16 
+synthesis                     -           -        [4, 3, 1024, 1024]   float32 
+---                           ---         ---      ---                  ---     
+Total                         22313167    2480     -                    -       
+
+Setting up PyTorch plugin "upfirdn2d_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py39_cu118 as PyTorch extensions root...
+Creating extension directory /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin...
+Detected CUDA files, patching ldflags
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/build.ninja...
+/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/utils/cpp_extension.py:1967: UserWarning: TORCH_CUDA_ARCH_LIST is not set, all archs for visible cards are included for compilation. 
+If this is not desired, please set os.environ['TORCH_CUDA_ARCH_LIST'].
+  warnings.warn(
+Building extension module upfirdn2d_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/3] c++ -MMD -MF upfirdn2d.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -fPIC -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cpp -o upfirdn2d.o 
+[2/3] /usr/local/cuda-12.5/bin/nvcc --generate-dependencies-with-compile --dependency-output upfirdn2d.cuda.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1011\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/include/THC -isystem /usr/local/cuda-12.5/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/include/python3.9 -D_GLIBCXX_USE_CXX11_ABI=0 -D__CUDA_NO_HALF_OPERATORS__ -D__CUDA_NO_HALF_CONVERSIONS__ -D__CUDA_NO_BFLOAT16_CONVERSIONS__ -D__CUDA_NO_HALF2_OPERATORS__ --expt-relaxed-constexpr -gencode=arch=compute_61,code=compute_61 -gencode=arch=compute_61,code=sm_61 --compiler-options '-fPIC' --use_fast_math --allow-unsupported-compiler -std=c++17 -c /export/users/zhaojiam/.cache/torch_extensions/py39_cu118/upfirdn2d_plugin/7edf9e6a584689218f8aa5314b3a0356-nvidia-geforce-gtx-1060-6gb/upfirdn2d.cu -o upfirdn2d.cuda.o 
+[3/3] c++ upfirdn2d.o upfirdn2d.cuda.o -shared -L/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/lib -lc10 -lc10_cuda -ltorch_cpu -ltorch_cuda -ltorch -ltorch_python -L/usr/local/cuda-12.5/lib64 -lcudart -o upfirdn2d_plugin.so
+Loading extension module upfirdn2d_plugin...
+Done setting up PyTorch plugin "upfirdn2d_plugin".
+
+Discriminator  Parameters  Buffers  Output shape         Datatype
+---            ---         ---      ---                  ---     
+b1024.fromrgb  128         16       [4, 32, 1024, 1024]  float16 
+b1024.skip     2048        16       [4, 64, 512, 512]    float16 
+b1024.conv0    9248        16       [4, 32, 1024, 1024]  float16 
+b1024.conv1    18496       16       [4, 64, 512, 512]    float16 
+b1024          -           16       [4, 64, 512, 512]    float16 
+b512.skip      8192        16       [4, 128, 256, 256]   float16 
+b512.conv0     36928       16       [4, 64, 512, 512]    float16 
+b512.conv1     73856       16       [4, 128, 256, 256]   float16 
+b512           -           16       [4, 128, 256, 256]   float16 
+b256.skip      32768       16       [4, 256, 128, 128]   float16 
+b256.conv0     147584      16       [4, 128, 256, 256]   float16 
+b256.conv1     295168      16       [4, 256, 128, 128]   float16 
+b256           -           16       [4, 256, 128, 128]   float16 
+b128.skip      131072      16       [4, 512, 64, 64]     float16 
+b128.conv0     590080      16       [4, 256, 128, 128]   float16 
+b128.conv1     1180160     16       [4, 512, 64, 64]     float16 
+b128           -           16       [4, 512, 64, 64]     float16 
+b64.skip       262144      16       [4, 512, 32, 32]     float32 
+b64.conv0      2359808     16       [4, 512, 64, 64]     float32 
+b64.conv1      2359808     16       [4, 512, 32, 32]     float32 
+b64            -           16       [4, 512, 32, 32]     float32 
+b32.skip       262144      16       [4, 512, 16, 16]     float32 
+b32.conv0      2359808     16       [4, 512, 32, 32]     float32 
+b32.conv1      2359808     16       [4, 512, 16, 16]     float32 
+b32            -           16       [4, 512, 16, 16]     float32 
+b16.skip       262144      16       [4, 512, 8, 8]       float32 
+b16.conv0      2359808     16       [4, 512, 16, 16]     float32 
+b16.conv1      2359808     16       [4, 512, 8, 8]       float32 
+b16            -           16       [4, 512, 8, 8]       float32 
+b8.skip        262144      16       [4, 512, 4, 4]       float32 
+b8.conv0       2359808     16       [4, 512, 8, 8]       float32 
+b8.conv1       2359808     16       [4, 512, 4, 4]       float32 
+b8             -           16       [4, 512, 4, 4]       float32 
+b4.mbstd       -           -        [4, 513, 4, 4]       float32 
+b4.conv        2364416     16       [4, 512, 4, 4]       float32 
+b4.fc          4194816     -        [4, 512]             float32 
+b4.out         513         -        [4, 1]               float32 
+---            ---         ---      ---                  ---     
+Total          29012513    544      -                    -       
+
+Setting up augmentation...
+Distributing across 1 GPUs...
+Setting up training phases...
+Exporting sample images...
+Initializing logs...
+Skipping tfevents export: No module named 'tensorboard'
+Training for 1 kimg...
+
+Traceback (most recent call last):
+  File "/export/users/zhaojiam/proj/stylegan3/train.py", line 286, in <module>
+    main() # pylint: disable=no-value-for-parameter
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/click/core.py", line 1157, in __call__
+    return self.main(*args, **kwargs)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/click/core.py", line 1078, in main
+    rv = self.invoke(ctx)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/click/core.py", line 1434, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/click/core.py", line 783, in invoke
+    return __callback(*args, **kwargs)
+  File "/export/users/zhaojiam/proj/stylegan3/train.py", line 281, in main
+    launch_training(c=c, desc=desc, outdir=opts.outdir, dry_run=opts.dry_run)
+  File "/export/users/zhaojiam/proj/stylegan3/train.py", line 96, in launch_training
+    subprocess_fn(rank=0, c=c, temp_dir=temp_dir)
+  File "/export/users/zhaojiam/proj/stylegan3/train.py", line 47, in subprocess_fn
+    training_loop.training_loop(rank=rank, **c)
+  File "/export/users/zhaojiam/proj/stylegan3/training/training_loop.py", line 278, in training_loop
+    loss.accumulate_gradients(phase=phase.name, real_img=real_img, real_c=real_c, gen_z=gen_z, gen_c=gen_c, gain=phase.interval, cur_nimg=cur_nimg)
+  File "/export/users/zhaojiam/proj/stylegan3/training/loss.py", line 75, in accumulate_gradients
+    gen_logits = self.run_D(gen_img, gen_c, blur_sigma=blur_sigma)
+  File "/export/users/zhaojiam/proj/stylegan3/training/loss.py", line 60, in run_D
+    logits = self.D(img, c, update_emas=update_emas)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/export/users/zhaojiam/proj/stylegan3/training/networks_stylegan2.py", line 783, in forward
+    x, img = block(x, img, **block_kwargs)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/export/users/zhaojiam/proj/stylegan3/training/networks_stylegan2.py", line 621, in forward
+    y = self.fromrgb(img)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1532, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/nn/modules/module.py", line 1541, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/export/users/zhaojiam/proj/stylegan3/training/networks_stylegan2.py", line 180, in forward
+    x = bias_act.bias_act(x, b, act=self.activation, gain=act_gain, clamp=act_clamp)
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/ops/bias_act.py", line 85, in bias_act
+    return _bias_act_cuda(dim=dim, act=act, alpha=alpha, gain=gain, clamp=clamp).apply(x, b)
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/stylegan3/lib/python3.9/site-packages/torch/autograd/function.py", line 598, in apply
+    return super().apply(*args, **kwargs)  # type: ignore[misc]
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/ops/bias_act.py", line 150, in forward
+    y = _plugin.bias_act(x, b, _null_tensor, _null_tensor, _null_tensor, 0, dim, spec.cuda_idx, alpha, gain, clamp)
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 256.00 MiB. GPU 

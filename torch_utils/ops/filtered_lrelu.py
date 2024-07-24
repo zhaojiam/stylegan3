@@ -25,8 +25,8 @@ def _init():
     if _plugin is None:
         _plugin = custom_ops.get_plugin(
             module_name='filtered_lrelu_plugin',
-            sources=['filtered_lrelu.cpp', 'filtered_lrelu_wr.cu', 'filtered_lrelu_rd.cu', 'filtered_lrelu_ns.cu'],
-            headers=['filtered_lrelu.h', 'filtered_lrelu.cu'],
+            sources=['filtered_lrelu.cpp', 'filtered_lrelu_wr.dp.cpp', 'filtered_lrelu_rd.dp.cpp', 'filtered_lrelu_ns.dp.cpp'],
+            headers=['filtered_lrelu.h', 'filtered_lrelu.dp.cpp'],
             source_dir=os.path.dirname(__file__),
             extra_cuda_cflags=['--use_fast_math', '--allow-unsupported-compiler'],
         )

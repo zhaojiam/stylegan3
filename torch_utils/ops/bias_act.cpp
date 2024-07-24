@@ -6,6 +6,8 @@
 // distribution of this software and related documentation without an express
 // license agreement from NVIDIA CORPORATION is strictly prohibited.
 
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <torch/extension.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <c10/cuda/CUDAGuard.h>
@@ -85,7 +87,27 @@ static torch::Tensor bias_act(torch::Tensor x, torch::Tensor b, torch::Tensor xr
     int blockSize = 4 * 32;
     int gridSize = (p.sizeX - 1) / (p.loopX * blockSize) + 1;
     void* args[] = {&p};
-    AT_CUDA_CHECK(cudaLaunchKernel(kernel, gridSize, blockSize, args, 0, at::cuda::getCurrentCUDAStream()));
+    /*
+    DPCT1049:27: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
+    /*
+    DPCT1123:28: The kernel function pointer cannot be used in the device code.
+    You need to call the kernel function with the correct argument(s) directly.
+    According to the kernel function definition, adjusting the dimension of the
+    sycl::nd_item may also be required.
+    */
+  AT_CUDA_CHECK([&]() {
+    ((sycl::queue *)(at::cuda::getCurrentCUDAStream()))
+        ->parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, gridSize) *
+                                             sycl::range<3>(1, 1, blockSize),
+                                         sycl::range<3>(1, 1, blockSize)),
+                       [=](sycl::nd_item<3> item_ct1) {
+                         kernel();
+                       });
+    return 0;
+  }());
     return y;
 }
 

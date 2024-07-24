@@ -6,6 +6,8 @@
 // distribution of this software and related documentation without an express
 // license agreement from NVIDIA CORPORATION is strictly prohibited.
 
+#include <sycl/sycl.hpp>
+#include <dpct/dpct.hpp>
 #include <torch/extension.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <c10/cuda/CUDAGuard.h>
@@ -44,19 +46,24 @@ static torch::Tensor upfirdn2d(torch::Tensor x, torch::Tensor f, int upx, int up
     p.x             = x.data_ptr();
     p.f             = f.data_ptr<float>();
     p.y             = y.data_ptr();
-    p.up            = make_int2(upx, upy);
-    p.down          = make_int2(downx, downy);
-    p.pad0          = make_int2(padx0, pady0);
+    p.up = sycl::int2(upx, upy);
+    p.down = sycl::int2(downx, downy);
+    p.pad0 = sycl::int2(padx0, pady0);
     p.flip          = (flip) ? 1 : 0;
     p.gain          = gain;
-    p.inSize        = make_int4((int)x.size(3), (int)x.size(2), (int)x.size(1), (int)x.size(0));
-    p.inStride      = make_int4((int)x.stride(3), (int)x.stride(2), (int)x.stride(1), (int)x.stride(0));
-    p.filterSize    = make_int2((int)f.size(1), (int)f.size(0));
-    p.filterStride  = make_int2((int)f.stride(1), (int)f.stride(0));
-    p.outSize       = make_int4((int)y.size(3), (int)y.size(2), (int)y.size(1), (int)y.size(0));
-    p.outStride     = make_int4((int)y.stride(3), (int)y.stride(2), (int)y.stride(1), (int)y.stride(0));
-    p.sizeMajor     = (p.inStride.z == 1) ? p.inSize.w : p.inSize.w * p.inSize.z;
-    p.sizeMinor     = (p.inStride.z == 1) ? p.inSize.z : 1;
+    p.inSize = sycl::int4((int)x.size(3), (int)x.size(2), (int)x.size(1),
+                          (int)x.size(0));
+    p.inStride = sycl::int4((int)x.stride(3), (int)x.stride(2),
+                            (int)x.stride(1), (int)x.stride(0));
+    p.filterSize = sycl::int2((int)f.size(1), (int)f.size(0));
+    p.filterStride = sycl::int2((int)f.stride(1), (int)f.stride(0));
+    p.outSize = sycl::int4((int)y.size(3), (int)y.size(2), (int)y.size(1),
+                           (int)y.size(0));
+    p.outStride = sycl::int4((int)y.stride(3), (int)y.stride(2),
+                             (int)y.stride(1), (int)y.stride(0));
+    p.sizeMajor =
+        (p.inStride.z() == 1) ? p.inSize.w() : p.inSize.w() * p.inSize.z();
+    p.sizeMinor = (p.inStride.z() == 1) ? p.inSize.z() : 1;
 
     // Choose CUDA kernel.
     upfirdn2d_kernel_spec spec;
@@ -73,27 +80,43 @@ static torch::Tensor upfirdn2d(torch::Tensor x, torch::Tensor f, int upx, int up
     p.launchMajor   = (p.sizeMajor - 1) / p.loopMajor + 1;
 
     // Compute grid size.
-    dim3 blockSize, gridSize;
+    dpct::dim3 blockSize, gridSize;
     if (spec.tileOutW < 0) // large
     {
-        blockSize = dim3(4, 32, 1);
-        gridSize = dim3(
-            ((p.outSize.y - 1) / blockSize.x + 1) * p.launchMinor,
-            (p.outSize.x - 1) / (blockSize.y * p.loopX) + 1,
-            p.launchMajor);
+        blockSize = dpct::dim3(4, 32, 1);
+        gridSize = dpct::dim3(
+            ((p.outSize.y() - 1) / blockSize.x + 1) * p.launchMinor,
+            (p.outSize.x() - 1) / (blockSize.y * p.loopX) + 1, p.launchMajor);
     }
     else // small
     {
-        blockSize = dim3(256, 1, 1);
-        gridSize = dim3(
-            ((p.outSize.y - 1) / spec.tileOutH + 1) * p.launchMinor,
-            (p.outSize.x - 1) / (spec.tileOutW * p.loopX) + 1,
-            p.launchMajor);
+        blockSize = dpct::dim3(256, 1, 1);
+        gridSize = dpct::dim3(
+            ((p.outSize.y() - 1) / spec.tileOutH + 1) * p.launchMinor,
+            (p.outSize.x() - 1) / (spec.tileOutW * p.loopX) + 1, p.launchMajor);
     }
 
     // Launch CUDA kernel.
     void* args[] = {&p};
-    AT_CUDA_CHECK(cudaLaunchKernel(spec.kernel, gridSize, blockSize, args, 0, at::cuda::getCurrentCUDAStream()));
+    /*
+    DPCT1049:39: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
+    /*
+    DPCT1123:40: The kernel function pointer cannot be used in the device code.
+    You need to call the kernel function with the correct argument(s) directly.
+    According to the kernel function definition, adjusting the dimension of the
+    sycl::nd_item may also be required.
+    */
+  AT_CUDA_CHECK([&]() {
+    ((sycl::queue *)(at::cuda::getCurrentCUDAStream()))
+        ->parallel_for(sycl::nd_range<3>(gridSize * blockSize, blockSize),
+                       [=](sycl::nd_item<3> item_ct1) {
+                         (spec.kernel)();
+                       });
+    return 0;
+  }());
     return y;
 }
 

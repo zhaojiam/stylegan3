@@ -25,7 +25,7 @@ def _init():
     if _plugin is None:
         _plugin = custom_ops.get_plugin(
             module_name='upfirdn2d_plugin',
-            sources=['upfirdn2d.cpp', 'upfirdn2d.cu'],
+            sources=['upfirdn2d.cpp', 'upfirdn2d.dp.cpp'],
             headers=['upfirdn2d.h'],
             source_dir=os.path.dirname(__file__),
             extra_cuda_cflags=['--use_fast_math', '--allow-unsupported-compiler'],

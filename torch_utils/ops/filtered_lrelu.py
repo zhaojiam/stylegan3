@@ -28,7 +28,7 @@ def _init():
             sources=['filtered_lrelu.cpp', 'filtered_lrelu_wr.dp.cpp', 'filtered_lrelu_rd.dp.cpp', 'filtered_lrelu_ns.dp.cpp'],
             headers=['filtered_lrelu.h', 'filtered_lrelu.dp.cpp'],
             source_dir=os.path.dirname(__file__),
-            extra_cuda_cflags=['--use_fast_math', '--allow-unsupported-compiler'],
+            # extra_cuda_cflags=['--use_fast_math', '--allow-unsupported-compiler'],
         )
     return True
 
@@ -53,7 +53,8 @@ def _parse_padding(padding):
 
 #----------------------------------------------------------------------------
 
-def filtered_lrelu(x, fu=None, fd=None, b=None, up=1, down=1, padding=0, gain=np.sqrt(2), slope=0.2, clamp=None, flip_filter=False, impl='cuda'):
+# def filtered_lrelu(x, fu=None, fd=None, b=None, up=1, down=1, padding=0, gain=np.sqrt(2), slope=0.2, clamp=None, flip_filter=False, impl='cuda'):
+def filtered_lrelu(x, fu=None, fd=None, b=None, up=1, down=1, padding=0, gain=np.sqrt(2), slope=0.2, clamp=None, flip_filter=False, impl='xpu'):
     r"""Filtered leaky ReLU for a batch of 2D images.
 
     Performs the following sequence of operations for each channel:
@@ -110,8 +111,10 @@ def filtered_lrelu(x, fu=None, fd=None, b=None, up=1, down=1, padding=0, gain=np
         Tensor of the shape `[batch_size, num_channels, out_height, out_width]`.
     """
     assert isinstance(x, torch.Tensor)
-    assert impl in ['ref', 'cuda']
-    if impl == 'cuda' and x.device.type == 'cuda' and _init():
+    # assert impl in ['ref', 'cuda']
+    assert impl in ['ref', 'xpu']
+    # if impl == 'cuda' and x.device.type == 'cuda' and _init():
+    if impl == 'xpu' and x.device.type == 'xpu' and _init():
         return _filtered_lrelu_cuda(up=up, down=down, padding=padding, gain=gain, slope=slope, clamp=clamp, flip_filter=flip_filter).apply(x, fu, fd, b, None, 0, 0)
     return _filtered_lrelu_ref(x, fu=fu, fd=fd, b=b, up=up, down=down, padding=padding, gain=gain, slope=slope, clamp=clamp, flip_filter=flip_filter)
 

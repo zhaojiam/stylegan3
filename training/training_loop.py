@@ -123,12 +123,13 @@ def training_loop(
 ):
     # Initialize.
     start_time = time.time()
-    device = torch.device('cuda', rank)
+    # device = torch.device('cuda', rank)
+    device = torch.device('xpu', rank)
     np.random.seed(random_seed * num_gpus + rank)
     torch.manual_seed(random_seed * num_gpus + rank)
-    torch.backends.cudnn.benchmark = cudnn_benchmark    # Improves training speed.
-    torch.backends.cuda.matmul.allow_tf32 = False       # Improves numerical accuracy.
-    torch.backends.cudnn.allow_tf32 = False             # Improves numerical accuracy.
+    # torch.backends.cudnn.benchmark = cudnn_benchmark    # Improves training speed.
+    # torch.backends.cuda.matmul.allow_tf32 = False       # Improves numerical accuracy.
+    # torch.backends.cudnn.allow_tf32 = False             # Improves numerical accuracy.
     conv2d_gradfix.enabled = True                       # Improves training speed.
     grid_sample_gradfix.enabled = True                  # Avoids errors with the augmentation pipe.
 
@@ -208,8 +209,10 @@ def training_loop(
         phase.start_event = None
         phase.end_event = None
         if rank == 0:
-            phase.start_event = torch.cuda.Event(enable_timing=True)
-            phase.end_event = torch.cuda.Event(enable_timing=True)
+            # phase.start_event = torch.cuda.Event(enable_timing=True)
+            phase.start_event = torch.xpu.Event(enable_timing=True)
+            # phase.end_event = torch.cuda.Event(enable_timing=True)
+            phase.end_event = torch.xpu.Event(enable_timing=True)
 
     # Export sample images.
     grid_size = None
@@ -269,7 +272,8 @@ def training_loop(
             if batch_idx % phase.interval != 0:
                 continue
             if phase.start_event is not None:
-                phase.start_event.record(torch.cuda.current_stream(device))
+                # phase.start_event.record(torch.cuda.current_stream(device))
+                phase.start_event.record(torch.xpu.current_stream(device))
 
             # Accumulate gradients.
             phase.opt.zero_grad(set_to_none=True)
@@ -294,7 +298,8 @@ def training_loop(
 
             # Phase done.
             if phase.end_event is not None:
-                phase.end_event.record(torch.cuda.current_stream(device))
+                # phase.end_event.record(torch.cuda.current_stream(device))
+                phase.end_event.record(torch.xpu.current_stream(device))
 
         # Update G_ema.
         with torch.autograd.profiler.record_function('Gema'):
@@ -332,9 +337,12 @@ def training_loop(
         fields += [f"sec/kimg {training_stats.report0('Timing/sec_per_kimg', (tick_end_time - tick_start_time) / (cur_nimg - tick_start_nimg) * 1e3):<7.2f}"]
         fields += [f"maintenance {training_stats.report0('Timing/maintenance_sec', maintenance_time):<6.1f}"]
         fields += [f"cpumem {training_stats.report0('Resources/cpu_mem_gb', psutil.Process(os.getpid()).memory_info().rss / 2**30):<6.2f}"]
-        fields += [f"gpumem {training_stats.report0('Resources/peak_gpu_mem_gb', torch.cuda.max_memory_allocated(device) / 2**30):<6.2f}"]
-        fields += [f"reserved {training_stats.report0('Resources/peak_gpu_mem_reserved_gb', torch.cuda.max_memory_reserved(device) / 2**30):<6.2f}"]
+        # fields += [f"gpumem {training_stats.report0('Resources/peak_gpu_mem_gb', torch.cuda.max_memory_allocated(device) / 2**30):<6.2f}"]
+        fields += [f"gpumem {training_stats.report0('Resources/peak_gpu_mem_gb', torch.xpu.max_memory_allocated(device) / 2**30):<6.2f}"]
+        # fields += [f"reserved {training_stats.report0('Resources/peak_gpu_mem_reserved_gb', torch.cuda.max_memory_reserved(device) / 2**30):<6.2f}"]
+        fields += [f"reserved {training_stats.report0('Resources/peak_gpu_mem_reserved_gb', torch.xpu.max_memory_reserved(device) / 2**30):<6.2f}"]
         torch.cuda.reset_peak_memory_stats()
+        torch.xpu.reset_peak_memory_stats()
         fields += [f"augment {training_stats.report0('Progress/augment', float(augment_pipe.p.cpu()) if augment_pipe is not None else 0):.3f}"]
         training_stats.report0('Timing/total_hours', (tick_end_time - start_time) / (60 * 60))
         training_stats.report0('Timing/total_days', (tick_end_time - start_time) / (24 * 60 * 60))

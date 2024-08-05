@@ -1,0 +1,26 @@
+No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda-12.5'
+Setting up PyTorch plugin "bias_act_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py310_xpu as PyTorch extensions root...
+Creating extension directory /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin...
+bias_act_plugin /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin/1c242eb1367bacca6e3567574fa441c8-intel-r--uhd-graphics-630 ['/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin/1c242eb1367bacca6e3567574fa441c8-intel-r--uhd-graphics-630/bias_act.cpp', '/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin/1c242eb1367bacca6e3567574fa441c8-intel-r--uhd-graphics-630/bias_act.dp.cpp'] {}
+==================
+ /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx 
+==========================
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin/1c242eb1367bacca6e3567574fa441c8-intel-r--uhd-graphics-630/build.ninja...
+Building extension module bias_act_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF bias_act.dp.o.d -DTORCH_EXTENSION_NAME=bias_act_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin/1c242eb1367bacca6e3567574fa441c8-intel-r--uhd-graphics-630/bias_act.dp.cpp -o bias_act.dp.o 
+[2/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF bias_act.o.d -DTORCH_EXTENSION_NAME=bias_act_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/bias_act_plugin/1c242eb1367bacca6e3567574fa441c8-intel-r--uhd-graphics-630/bias_act.cpp -o bias_act.o 
+[3/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx bias_act.o bias_act.dp.o -shared -fsycl -lc10 -ltorch_cpu -ltorch -ltorch_python -L/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/lib -L/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/lib -Wl,--start-group /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_sycl.a /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_intel_ilp64.a /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_sequential.a /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_core.a -Wl,--end-group -lsycl -lOpenCL -lpthread -lm -ldl -lintel-ext-pt-gpu -o bias_act_plugin.so
+Loading extension module bias_act_plugin...
+Done setting up PyTorch plugin "bias_act_plugin".
+tensor([[0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.],
+        [0., 0., 0., 0., 0.]], device='xpu:0')

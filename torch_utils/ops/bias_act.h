@@ -9,8 +9,15 @@
 //------------------------------------------------------------------------
 // CUDA kernel parameters.
 
+#include <fstream>
+#include <sycl/sycl.hpp>
+#include "dpct/dpct.hpp"
+#include <torch/extension.h>
+
+
 struct bias_act_kernel_params
 {
+    c10::ScalarType dtype = c10::ScalarType::Undefined;
     const void* x;      // [sizeX]
     const void* b;      // [sizeB] or NULL
     const void* xref;   // [sizeX] or NULL
@@ -33,6 +40,8 @@ struct bias_act_kernel_params
 //------------------------------------------------------------------------
 // CUDA kernel selection.
 
-template <class T> void* choose_bias_act_kernel(const bias_act_kernel_params& p);
+// template <class T> void* choose_bias_act_kernel(const bias_act_kernel_params& p);
+void bias_act_kernel_launch(bias_act_kernel_params p);
+
 
 //------------------------------------------------------------------------

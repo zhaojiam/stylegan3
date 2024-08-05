@@ -10,6 +10,7 @@
 #include <dpct/dpct.hpp>
 #include <c10/util/Half.h>
 #include "bias_act.h"
+#include <ipex.h>
 
 //------------------------------------------------------------------------
 // Helpers.
@@ -168,25 +169,59 @@ void bias_act_kernel(bias_act_kernel_params p, const sycl::nd_item<3> &item_ct1)
 //------------------------------------------------------------------------
 // CUDA kernel selection.
 
-template <class T> void* choose_bias_act_kernel(const bias_act_kernel_params& p)
+template <class T>
+void choose_bias_act_kernel(bias_act_kernel_params p, const sycl::nd_item<3> &item_ct1)
 {
-    if (p.act == 1) return (void*)bias_act_kernel<T, 1>;
-    if (p.act == 2) return (void*)bias_act_kernel<T, 2>;
-    if (p.act == 3) return (void*)bias_act_kernel<T, 3>;
-    if (p.act == 4) return (void*)bias_act_kernel<T, 4>;
-    if (p.act == 5) return (void*)bias_act_kernel<T, 5>;
-    if (p.act == 6) return (void*)bias_act_kernel<T, 6>;
-    if (p.act == 7) return (void*)bias_act_kernel<T, 7>;
-    if (p.act == 8) return (void*)bias_act_kernel<T, 8>;
-    if (p.act == 9) return (void*)bias_act_kernel<T, 9>;
-    return NULL;
+    // if (p.act == 1) return (void*)bias_act_kernel<T, 1>;
+    // if (p.act == 2) return (void*)bias_act_kernel<T, 2>;
+    // if (p.act == 3) return (void*)bias_act_kernel<T, 3>;
+    // if (p.act == 4) return (void*)bias_act_kernel<T, 4>;
+    // if (p.act == 5) return (void*)bias_act_kernel<T, 5>;
+    // if (p.act == 6) return (void*)bias_act_kernel<T, 6>;
+    // if (p.act == 7) return (void*)bias_act_kernel<T, 7>;
+    // if (p.act == 8) return (void*)bias_act_kernel<T, 8>;
+    // if (p.act == 9) return (void*)bias_act_kernel<T, 9>;
+    // return NULL;
+    if (p.act == 1) bias_act_kernel<T, 1>(p, item_ct1);
+    else if (p.act == 2) bias_act_kernel<T, 2>(p, item_ct1);
+    else if (p.act == 3) bias_act_kernel<T, 3>(p, item_ct1);
+    else if (p.act == 4) bias_act_kernel<T, 4>(p, item_ct1);
+    else if (p.act == 5) bias_act_kernel<T, 5>(p, item_ct1);
+    else if (p.act == 6) bias_act_kernel<T, 6>(p, item_ct1);
+    else if (p.act == 7) bias_act_kernel<T, 7>(p, item_ct1);
+    else if (p.act == 8) bias_act_kernel<T, 8>(p, item_ct1);
+    else if (p.act == 9) bias_act_kernel<T, 9>(p, item_ct1);
 }
 
-//------------------------------------------------------------------------
-// Template specializations.
+// //------------------------------------------------------------------------
+// // Template specializations.
 
-template void* choose_bias_act_kernel<double>       (const bias_act_kernel_params& p);
-template void* choose_bias_act_kernel<float>        (const bias_act_kernel_params& p);
-template void* choose_bias_act_kernel<c10::Half>    (const bias_act_kernel_params& p);
+// template void* choose_bias_act_kernel<double>       (const bias_act_kernel_params& p);
+// template void* choose_bias_act_kernel<float>        (const bias_act_kernel_params& p);
+// template void* choose_bias_act_kernel<c10::Half>    (const bias_act_kernel_params& p);
 
 //------------------------------------------------------------------------
+
+void bias_act_kernel_launch(bias_act_kernel_params p) {
+    int blockSize = 4 * 32; // TODO tune, or rather remove and let the runtime choose its favorite work unit size
+    int gridSize = (p.sizeX - 1) / (p.loopX * blockSize) + 1;
+    
+    auto device_type = c10::DeviceType::XPU;
+    c10::impl::VirtualGuardImpl impl(device_type);
+    c10::Stream c10_stream = impl.getStream(c10::Device(device_type));
+    auto& queue = xpu::get_queue_from_stream(c10_stream);
+    
+    queue.submit([&] (sycl::handler& cgh) {
+        
+        AT_DISPATCH_FLOATING_TYPES_AND_HALF(p.dtype, "bias_act_xpu", [&]
+        {
+            cgh.parallel_for(
+                    sycl::nd_range<3>(
+                        sycl::range<3>(1, 1, gridSize) * sycl::range<3>(1, 1, blockSize),
+                        sycl::range<3>(1, 1, blockSize)),
+                    [=](sycl::nd_item<3> item_ct1) {
+                        choose_bias_act_kernel<scalar_t>(p, item_ct1);
+                    });
+        });
+    }).wait();
+}

@@ -11,8 +11,8 @@ from torch_utils.ops import upfirdn2d
 
 
 def load_bias():
-    x = torch.randn(10, 5).to('xpu')
-    b = torch.randn(5).to('xpu')
+    x = torch.randn(10, 5, dtype=torch.float32).to('xpu')
+    b = torch.randn(5, dtype=torch.float32).to('xpu')
     output = bias_act.bias_act(x=x, b=b, dim=1, act='relu', alpha=0.2, gain=1, clamp=5, impl='xpu')
     print(output)
 
@@ -34,6 +34,6 @@ def load_upfirdn2d():
     print(output)
 
 if __name__ == '__main__':
-    load_bias()
-    # load_filterd_lrelu()
+    # load_bias()
+    load_filterd_lrelu()
     # load_upfirdn2d()

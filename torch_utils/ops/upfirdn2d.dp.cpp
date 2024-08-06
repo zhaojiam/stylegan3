@@ -8,8 +8,9 @@
 
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
-#include <c10/util/Half.h>
 #include "upfirdn2d.h"
+#include <ipex.h>
+#include <c10/util/Half.h>
 
 //------------------------------------------------------------------------
 // Helpers.
@@ -25,6 +26,15 @@ static __dpct_inline__ int floor_div(int a, int b)
     return (a + t * b) / b - t;
 }
 
+static void update_params(upfirdn2d_kernel_params& p, int loopMinor, int loopX) {
+    // Set looping options.
+    p.loopMajor     = (p.sizeMajor - 1) / 16384 + 1;
+    p.loopMinor     = loopMinor;
+    p.loopX         = loopX;
+    p.launchMinor   = (p.sizeMinor - 1) / loopMinor + 1;
+    p.launchMajor   = (p.sizeMajor - 1) / p.loopMajor + 1;
+}
+
 //------------------------------------------------------------------------
 // Generic CUDA implementation for large filters.
 
@@ -34,14 +44,17 @@ template <class T> static void upfirdn2d_kernel_large(upfirdn2d_kernel_params p,
     typedef typename InternalType<T>::scalar_t scalar_t;
 
     // Calculate thread index.
-    int minorBase = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
-                    item_ct1.get_local_id(2);
+    // int minorBase = item_ct1.get_group(2) * item_ct1.get_local_range(2) +
+    //                 item_ct1.get_local_id(2);
+    int minorBase = item_ct1.get_group(0) * item_ct1.get_local_range(0) +
+                    item_ct1.get_local_id(0);
     int outY = minorBase / p.launchMinor;
     minorBase -= outY * p.launchMinor;
     int outXBase =
         item_ct1.get_group(1) * p.loopX * item_ct1.get_local_range(1) +
         item_ct1.get_local_id(1);
-    int majorBase = item_ct1.get_group(0) * p.loopMajor;
+    // int majorBase = item_ct1.get_group(0) * p.loopMajor;
+    int majorBase = item_ct1.get_group(2) * p.loopMajor;
     if (outXBase >= p.outSize.x() | outY >= p.outSize.y() |
         majorBase >= p.sizeMajor)
         return;
@@ -109,7 +122,8 @@ template <class T> static void upfirdn2d_kernel_large(upfirdn2d_kernel_params p,
             // Store result.
             v *= p.gain;
             ((T *)p.y)[outX * p.outStride.x() + outY * p.outStride.y() +
-                       c * p.outStride.z() + n * p.outStride.w()] = (T)v;
+                       c * p.outStride.z() + n * p.outStride.w()] =
+                       (T)v;
         }
     }
 }
@@ -128,28 +142,34 @@ adjust the code, or use smaller sub-group size to avoid high register pressure.
 static void
 upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
                        const sycl::nd_item<3> &item_ct1,
-                       sycl::local_accessor<volatile scalar_t, 2> sf,
-                       sycl::local_accessor<volatile scalar_t, 3> sx)
+                    //    sycl::local_accessor<volatile scalar_t, 2> sf,
+                    //    sycl::local_accessor<volatile scalar_t, 3> sx)
+                       sycl::local_accessor<T, 2> sf,
+                       sycl::local_accessor<T, 3> sx)
 {
     typedef typename InternalType<T>::scalar_t scalar_t;
     const int tileInW = ((tileOutW - 1) * downx + filterW - 1) / upx + 1;
     const int tileInH = ((tileOutH - 1) * downy + filterH - 1) / upy + 1;
 
     // Calculate tile index.
-    int minorBase = item_ct1.get_group(2);
+    // int minorBase = item_ct1.get_group(2);
+    int minorBase = item_ct1.get_group(0);
     int tileOutY = minorBase / p.launchMinor;
     minorBase -= tileOutY * p.launchMinor;
     minorBase *= loopMinor;
     tileOutY *= tileOutH;
     int tileOutXBase = item_ct1.get_group(1) * p.loopX * tileOutW;
-    int majorBase = item_ct1.get_group(0) * p.loopMajor;
+    // int majorBase = item_ct1.get_group(0) * p.loopMajor;
+    int majorBase = item_ct1.get_group(2) * p.loopMajor;
     if (tileOutXBase >= p.outSize.x() | tileOutY >= p.outSize.y() |
         majorBase >= p.sizeMajor)
         return;
 
     // Load filter (flipped).
-    for (int tapIdx = item_ct1.get_local_id(2); tapIdx < filterH * filterW;
-         tapIdx += item_ct1.get_local_range(2))
+    // for (int tapIdx = item_ct1.get_local_id(2); tapIdx < filterH * filterW;
+    //      tapIdx += item_ct1.get_local_range(2))
+    for (int tapIdx = item_ct1.get_local_id(0); tapIdx < filterH * filterW;
+         tapIdx += item_ct1.get_local_range(0))
     {
         int fy = tapIdx / filterW;
         int fx = tapIdx - fy * filterW;
@@ -188,10 +208,13 @@ upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
-            for (int inIdx = item_ct1.get_local_id(2);
+            item_ct1.barrier(sycl::access::fence_space::local_space);
+            // for (int inIdx = item_ct1.get_local_id(2);
+            //      inIdx < tileInH * tileInW * loopMinor;
+            //      inIdx += item_ct1.get_local_range(2))
+            for (int inIdx = item_ct1.get_local_id(0);
                  inIdx < tileInH * tileInW * loopMinor;
-                 inIdx += item_ct1.get_local_range(2))
+                 inIdx += item_ct1.get_local_range(0))
             {
                 int relC = inIdx;
                 int relInX = relC / loopMinor;
@@ -221,10 +244,13 @@ upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
-            for (int outIdx = item_ct1.get_local_id(2);
+            item_ct1.barrier(sycl::access::fence_space::local_space);
+            // for (int outIdx = item_ct1.get_local_id(2);
+            //      outIdx < tileOutH * tileOutW * loopMinor;
+            //      outIdx += item_ct1.get_local_range(2))
+            for (int outIdx = item_ct1.get_local_id(0);
                  outIdx < tileOutH * tileOutW * loopMinor;
-                 outIdx += item_ct1.get_local_range(2))
+                 outIdx += item_ct1.get_local_range(0))
             {
                 int relC = outIdx;
                 int relOutX = relC / loopMinor;
@@ -257,8 +283,7 @@ upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
                             v += sx[relInY + y][relInX + x][relC] * sf[filterY + y * upy][filterX + x * upx];
                     v *= p.gain;
                     ((T *)p.y)[outX * p.outStride.x() + outY * p.outStride.y() +
-                               c * p.outStride.z() + n * p.outStride.w()] =
-                        (T)v;
+                               c * p.outStride.z() + n * p.outStride.w()] = (T)v;
                 }
             }
         }
@@ -266,185 +291,379 @@ upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
 }
 
 //------------------------------------------------------------------------
-// CUDA kernel selection.
+// Helper functions for launching the kernels.
 
-template <class T> upfirdn2d_kernel_spec choose_upfirdn2d_kernel(const upfirdn2d_kernel_params& p)
-{
-    int s = p.inStride.z(), fx = p.filterSize.x(), fy = p.filterSize.y();
-    upfirdn2d_kernel_spec spec = {(void*)upfirdn2d_kernel_large<T>, -1,-1,1, 4}; // contiguous
-    if (s == 1)           spec = {(void*)upfirdn2d_kernel_large<T>, -1,-1,4, 1}; // channels_last
+template <class T, int upx, int upy, int downx, int downy, int filterW, int filterH, int tileOutW, int tileOutH, int loopMinor>
+void run_upfirdn2d_kernel_small(upfirdn2d_kernel_params p) {
+    update_params(p, loopMinor, 1);
+    
+    // Compute grid size - for small kernels
+    sycl::range<3> blockSize = sycl::range<3>(256, 1, 1);
+    sycl::range<3> gridSize = sycl::range<3>(
+        ((p.outSize.y() - 1) / tileOutH + 1) * p.launchMinor,
+        (p.outSize.x() - 1) / (tileOutW * p.loopX) + 1, p.launchMajor);
 
-    // No up/downsampling.
-    if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,24, 64,32,1>, 64,32,1, 1};
-        if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,16, 64,32,1>, 64,32,1, 1};
-        if (s != 1 && fx <= 7  && fy <= 7 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 7,7,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 6,6,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 5  && fy <= 5 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 5,5,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 4,4,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 3  && fy <= 3 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 3,3,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 24 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,1,  128,8,1>, 128,8,1, 1};
-        if (s != 1 && fx <= 16 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,1,  128,8,1>, 128,8,1, 1};
-        if (s != 1 && fx <= 8  && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 8,1,   128,8,1>, 128,8,1, 1};
-        if (s != 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,24,  32,32,1>, 32,32,1, 1};
-        if (s != 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,16,  32,32,1>, 32,32,1, 1};
-        if (s != 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,8,   32,32,1>, 32,32,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,24, 32,32,1>,  32,32,1,  1};
-        if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,16, 32,32,1>,  32,32,1,  1};
-        if (s == 1 && fx <= 7  && fy <= 7 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 7,7,   16,16,8>,  16,16,8,  1};
-        if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 6,6,   16,16,8>,  16,16,8,  1};
-        if (s == 1 && fx <= 5  && fy <= 5 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 5,5,   16,16,8>,  16,16,8,  1};
-        if (s == 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 4,4,   16,16,8>,  16,16,8,  1};
-        if (s == 1 && fx <= 3  && fy <= 3 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 3,3,   16,16,8>,  16,16,8,  1};
-        if (s == 1 && fx <= 24 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,1,  128,1,16>, 128,1,16, 1};
-        if (s == 1 && fx <= 16 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,1,  128,1,16>, 128,1,16, 1};
-        if (s == 1 && fx <= 8  && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 8,1,   128,1,16>, 128,1,16, 1};
-        if (s == 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,24,  1,128,16>, 1,128,16, 1};
-        if (s == 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,16,  1,128,16>, 1,128,16, 1};
-        if (s == 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,8,   1,128,16>, 1,128,16, 1};
-    }
+    /*
+    DPCT1049:1: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
+  {
+    // tileInW/H computation copied from inside the kernel (needed for accessor definition here)
+    const int tileInW = ((tileOutW - 1) * downx + filterW - 1) / upx + 1;
+    const int tileInH = ((tileOutH - 1) * downy + filterH - 1) / upy + 1;
 
-    // 2x upsampling.
-    if (p.up.x() == 2 && p.up.y() == 2 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 24,24, 64,32,1>, 64,32,1, 1};
-        if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 16,16, 64,32,1>, 64,32,1, 1};
-        if (s != 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 8,8,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 6,6,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 4,4,   64,16,1>, 64,16,1, 1};
-        if (s != 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 2,2,   64,16,1>, 64,16,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 24,24, 32,32,1>, 32,32,1, 1};
-        if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 16,16, 32,32,1>, 32,32,1, 1};
-        if (s == 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 8,8,   16,16,8>, 16,16,8, 1};
-        if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 6,6,   16,16,8>, 16,16,8, 1};
-        if (s == 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 4,4,   16,16,8>, 16,16,8, 1};
-        if (s == 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 2,2,   16,16,8>, 16,16,8, 1};
-    }
-    if (p.up.x() == 2 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 24,1, 128,8,1>, 128,8,1, 1};
-        if (s != 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 16,1, 128,8,1>, 128,8,1, 1};
-        if (s != 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 8,1,  128,8,1>, 128,8,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 24,1, 128,1,16>, 128,1,16, 1};
-        if (s == 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 16,1, 128,1,16>, 128,1,16, 1};
-        if (s == 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 8,1,  128,1,16>, 128,1,16, 1};
-    }
-    if (p.up.x() == 1 && p.up.y() == 2 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 1 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,24, 32,32,1>, 32,32,1, 1};
-        if (s != 1 && fx <= 1 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,16, 32,32,1>, 32,32,1, 1};
-        if (s != 1 && fx <= 1 && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,8,  32,32,1>, 32,32,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 1 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,24, 1,128,16>, 1,128,16, 1};
-        if (s == 1 && fx <= 1 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,16, 1,128,16>, 1,128,16, 1};
-        if (s == 1 && fx <= 1 && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,8,  1,128,16>, 1,128,16, 1};
-    }
+    auto device_type = c10::DeviceType::XPU;
+    c10::impl::VirtualGuardImpl impl(device_type);
+    c10::Stream c10_stream = impl.getStream(c10::Device(device_type));
+    auto& queue = xpu::get_queue_from_stream(c10_stream);
+    
+    queue.submit([&](sycl::handler &cgh) {
+          sycl::local_accessor<T, 2> sf_acc_ct1(
+              sycl::range<2>(filterH, filterW), cgh);
+          sycl::local_accessor<T, 3> sx_acc_ct1(
+              sycl::range<3>(tileInH, tileInW, loopMinor), cgh);
 
-    // 2x downsampling.
-    if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 2 && p.down.y() == 2)
-    {
-        // contiguous
-        if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 24,24, 32,16,1>, 32,16,1, 1};
-        if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 16,16, 32,16,1>, 32,16,1, 1};
-        if (s != 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 8,8,   32,8,1>,  32,8,1,  1};
-        if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 6,6,   32,8,1>,  32,8,1,  1};
-        if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 4,4,   32,8,1>,  32,8,1,  1};
-        if (s != 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 2,2,   32,8,1>,  32,8,1,  1};
-        // channels_last
-        if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 24,24, 16,16,1>, 16,16,1, 1};
-        if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 16,16, 16,16,1>, 16,16,1, 1};
-        if (s == 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 8,8,   8,8,8>,   8,8,8,   1};
-        if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 6,6,   8,8,8>,   8,8,8,   1};
-        if (s == 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 4,4,   8,8,8>,   8,8,8,   1};
-        if (s == 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 2,2,   8,8,8>,   8,8,8,   1};
-    }
-    if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 2 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 24,1, 64,8,1>, 64,8,1, 1};
-        if (s != 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 16,1, 64,8,1>, 64,8,1, 1};
-        if (s != 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 8,1,  64,8,1>, 64,8,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 24,1, 64,1,8>, 64,1,8, 1};
-        if (s == 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 16,1, 64,1,8>, 64,1,8, 1};
-        if (s == 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 8,1,  64,1,8>, 64,1,8, 1};
-    }
-    if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 2)
-    {
-        // contiguous
-        if (s != 1 && fx <= 1 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,24, 32,16,1>, 32,16,1, 1};
-        if (s != 1 && fx <= 1 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,16, 32,16,1>, 32,16,1, 1};
-        if (s != 1 && fx <= 1 && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,8,  32,16,1>, 32,16,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,24, 1,64,8>, 1,64,8, 1};
-        if (s == 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,16, 1,64,8>, 1,64,8, 1};
-        if (s == 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,8,  1,64,8>, 1,64,8, 1};
-    }
-
-    // 4x upsampling.
-    if (p.up.x() == 4 && p.up.y() == 4 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 48 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 48,48, 64,32,1>, 64,32,1, 1};
-        if (s != 1 && fx <= 32 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 32,32, 64,32,1>, 64,32,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 48 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 48,48, 32,32,1>, 32,32,1, 1};
-        if (s == 1 && fx <= 32 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 32,32, 32,32,1>, 32,32,1, 1};
-    }
-    if (p.up.x() == 4 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 48,1, 128,8,1>, 128,8,1, 1};
-        if (s != 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 32,1, 128,8,1>, 128,8,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 48,1, 128,1,16>, 128,1,16, 1};
-        if (s == 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 32,1, 128,1,16>, 128,1,16, 1};
-    }
-    if (p.up.x() == 1 && p.up.y() == 4 && p.down.x() == 1 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 1 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,48, 32,32,1>, 32,32,1, 1};
-        if (s != 1 && fx <= 1 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,32, 32,32,1>, 32,32,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 1 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,48, 1,128,16>, 1,128,16, 1};
-        if (s == 1 && fx <= 1 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,32, 1,128,16>, 1,128,16, 1};
-    }
-
-    // 4x downsampling (inefficient).
-    if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 4 && p.down.y() == 1)
-    {
-        // contiguous
-        if (s != 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 48,1, 32,8,1>, 32,8,1, 1};
-        if (s != 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 32,1, 32,8,1>, 32,8,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 48,1, 32,1,8>, 32,1,8, 1};
-        if (s == 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 32,1, 32,1,8>, 32,1,8, 1};
-    }
-    if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 4)
-    {
-        // contiguous
-        if (s != 1 && fx <= 1 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,48, 32,8,1>, 32,8,1, 1};
-        if (s != 1 && fx <= 1 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,32, 32,8,1>, 32,8,1, 1};
-        // channels_last
-        if (s == 1 && fx <= 1  && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,48, 1,32,8>, 1,32,8, 1};
-        if (s == 1 && fx <= 1  && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,32, 1,32,8>, 1,32,8, 1};
-    }
-    return spec;
+          cgh.parallel_for(
+              sycl::nd_range<3>(gridSize * blockSize, blockSize),
+              [=](sycl::nd_item<3> item_ct1) {
+                upfirdn2d_kernel_small<T, upx, upy, downx, downy, filterW,
+                                       filterH, tileOutW, tileOutH, loopMinor>(
+                    p, item_ct1, sf_acc_ct1, sx_acc_ct1);
+              });
+        }).wait();
+  }
 }
+
+template <class T>
+void run_upfirdn2d_kernel_large(upfirdn2d_kernel_params p, int tileOutW, int tileOutH, int loopMinor, int loopX) {
+    update_params(p, loopMinor, loopX);
+    
+    // Compute grid size - for large kernels
+    sycl::range<3> blockSize = sycl::range<3>(4, 32, 1);
+    sycl::range<3> gridSize = sycl::range<3>(
+        ((p.outSize.y() - 1) / blockSize[2] + 1) * p.launchMinor,
+        (p.outSize.x() - 1) / (blockSize[1] * p.loopX) + 1,
+        p.launchMajor);
+
+    /*
+    DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
+  {
+
+    auto device_type = c10::DeviceType::XPU;
+    c10::impl::VirtualGuardImpl impl(device_type);
+    c10::Stream c10_stream = impl.getStream(c10::Device(device_type));
+    auto& queue = xpu::get_queue_from_stream(c10_stream);
+
+    queue.submit([&](sycl::handler &cgh) {
+
+          cgh.parallel_for(sycl::nd_range<3>(gridSize * blockSize, blockSize),
+                           [=](sycl::nd_item<3> item_ct1) {
+                             upfirdn2d_kernel_large<T>(p, item_ct1);
+                           });
+        }).wait();
+  }
+}
+
+// // CUDA kernel selection.
+
+// template <class T> upfirdn2d_kernel_spec choose_upfirdn2d_kernel(const upfirdn2d_kernel_params& p)
+// {
+//     int s = p.inStride.z(), fx = p.filterSize.x(), fy = p.filterSize.y();
+//     upfirdn2d_kernel_spec spec = {(void*)upfirdn2d_kernel_large<T>, -1,-1,1, 4}; // contiguous
+//     if (s == 1)           spec = {(void*)upfirdn2d_kernel_large<T>, -1,-1,4, 1}; // channels_last
+
+//     // No up/downsampling.
+//     if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,24, 64,32,1>, 64,32,1, 1};
+//         if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,16, 64,32,1>, 64,32,1, 1};
+//         if (s != 1 && fx <= 7  && fy <= 7 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 7,7,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 6,6,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 5  && fy <= 5 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 5,5,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 4,4,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 3  && fy <= 3 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 3,3,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 24 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,1,  128,8,1>, 128,8,1, 1};
+//         if (s != 1 && fx <= 16 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,1,  128,8,1>, 128,8,1, 1};
+//         if (s != 1 && fx <= 8  && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 8,1,   128,8,1>, 128,8,1, 1};
+//         if (s != 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,24,  32,32,1>, 32,32,1, 1};
+//         if (s != 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,16,  32,32,1>, 32,32,1, 1};
+//         if (s != 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,8,   32,32,1>, 32,32,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,24, 32,32,1>,  32,32,1,  1};
+//         if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,16, 32,32,1>,  32,32,1,  1};
+//         if (s == 1 && fx <= 7  && fy <= 7 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 7,7,   16,16,8>,  16,16,8,  1};
+//         if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 6,6,   16,16,8>,  16,16,8,  1};
+//         if (s == 1 && fx <= 5  && fy <= 5 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 5,5,   16,16,8>,  16,16,8,  1};
+//         if (s == 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 4,4,   16,16,8>,  16,16,8,  1};
+//         if (s == 1 && fx <= 3  && fy <= 3 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 3,3,   16,16,8>,  16,16,8,  1};
+//         if (s == 1 && fx <= 24 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,1,  128,1,16>, 128,1,16, 1};
+//         if (s == 1 && fx <= 16 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,1,  128,1,16>, 128,1,16, 1};
+//         if (s == 1 && fx <= 8  && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 8,1,   128,1,16>, 128,1,16, 1};
+//         if (s == 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,24,  1,128,16>, 1,128,16, 1};
+//         if (s == 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,16,  1,128,16>, 1,128,16, 1};
+//         if (s == 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,8,   1,128,16>, 1,128,16, 1};
+//     }
+
+//     // 2x upsampling.
+//     if (p.up.x() == 2 && p.up.y() == 2 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 24,24, 64,32,1>, 64,32,1, 1};
+//         if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 16,16, 64,32,1>, 64,32,1, 1};
+//         if (s != 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 8,8,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 6,6,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 4,4,   64,16,1>, 64,16,1, 1};
+//         if (s != 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 2,2,   64,16,1>, 64,16,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 24,24, 32,32,1>, 32,32,1, 1};
+//         if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 16,16, 32,32,1>, 32,32,1, 1};
+//         if (s == 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 8,8,   16,16,8>, 16,16,8, 1};
+//         if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 6,6,   16,16,8>, 16,16,8, 1};
+//         if (s == 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 4,4,   16,16,8>, 16,16,8, 1};
+//         if (s == 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 2,2, 1,1, 2,2,   16,16,8>, 16,16,8, 1};
+//     }
+//     if (p.up.x() == 2 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 24,1, 128,8,1>, 128,8,1, 1};
+//         if (s != 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 16,1, 128,8,1>, 128,8,1, 1};
+//         if (s != 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 8,1,  128,8,1>, 128,8,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 24,1, 128,1,16>, 128,1,16, 1};
+//         if (s == 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 16,1, 128,1,16>, 128,1,16, 1};
+//         if (s == 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 2,1, 1,1, 8,1,  128,1,16>, 128,1,16, 1};
+//     }
+//     if (p.up.x() == 1 && p.up.y() == 2 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 1 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,24, 32,32,1>, 32,32,1, 1};
+//         if (s != 1 && fx <= 1 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,16, 32,32,1>, 32,32,1, 1};
+//         if (s != 1 && fx <= 1 && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,8,  32,32,1>, 32,32,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 1 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,24, 1,128,16>, 1,128,16, 1};
+//         if (s == 1 && fx <= 1 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,16, 1,128,16>, 1,128,16, 1};
+//         if (s == 1 && fx <= 1 && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,2, 1,1, 1,8,  1,128,16>, 1,128,16, 1};
+//     }
+
+//     // 2x downsampling.
+//     if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 2 && p.down.y() == 2)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 24,24, 32,16,1>, 32,16,1, 1};
+//         if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 16,16, 32,16,1>, 32,16,1, 1};
+//         if (s != 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 8,8,   32,8,1>,  32,8,1,  1};
+//         if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 6,6,   32,8,1>,  32,8,1,  1};
+//         if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 4,4,   32,8,1>,  32,8,1,  1};
+//         if (s != 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 2,2,   32,8,1>,  32,8,1,  1};
+//         // channels_last
+//         if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 24,24, 16,16,1>, 16,16,1, 1};
+//         if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 16,16, 16,16,1>, 16,16,1, 1};
+//         if (s == 1 && fx <= 8  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 8,8,   8,8,8>,   8,8,8,   1};
+//         if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 6,6,   8,8,8>,   8,8,8,   1};
+//         if (s == 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 4,4,   8,8,8>,   8,8,8,   1};
+//         if (s == 1 && fx <= 2  && fy <= 2 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,2, 2,2,   8,8,8>,   8,8,8,   1};
+//     }
+//     if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 2 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 24,1, 64,8,1>, 64,8,1, 1};
+//         if (s != 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 16,1, 64,8,1>, 64,8,1, 1};
+//         if (s != 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 8,1,  64,8,1>, 64,8,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 24 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 24,1, 64,1,8>, 64,1,8, 1};
+//         if (s == 1 && fx <= 16 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 16,1, 64,1,8>, 64,1,8, 1};
+//         if (s == 1 && fx <= 8  && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 2,1, 8,1,  64,1,8>, 64,1,8, 1};
+//     }
+//     if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 2)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 1 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,24, 32,16,1>, 32,16,1, 1};
+//         if (s != 1 && fx <= 1 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,16, 32,16,1>, 32,16,1, 1};
+//         if (s != 1 && fx <= 1 && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,8,  32,16,1>, 32,16,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,24, 1,64,8>, 1,64,8, 1};
+//         if (s == 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,16, 1,64,8>, 1,64,8, 1};
+//         if (s == 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,2, 1,8,  1,64,8>, 1,64,8, 1};
+//     }
+
+//     // 4x upsampling.
+//     if (p.up.x() == 4 && p.up.y() == 4 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 48 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 48,48, 64,32,1>, 64,32,1, 1};
+//         if (s != 1 && fx <= 32 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 32,32, 64,32,1>, 64,32,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 48 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 48,48, 32,32,1>, 32,32,1, 1};
+//         if (s == 1 && fx <= 32 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 4,4, 1,1, 32,32, 32,32,1>, 32,32,1, 1};
+//     }
+//     if (p.up.x() == 4 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 48,1, 128,8,1>, 128,8,1, 1};
+//         if (s != 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 32,1, 128,8,1>, 128,8,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 48,1, 128,1,16>, 128,1,16, 1};
+//         if (s == 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 4,1, 1,1, 32,1, 128,1,16>, 128,1,16, 1};
+//     }
+//     if (p.up.x() == 1 && p.up.y() == 4 && p.down.x() == 1 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 1 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,48, 32,32,1>, 32,32,1, 1};
+//         if (s != 1 && fx <= 1 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,32, 32,32,1>, 32,32,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 1 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,48, 1,128,16>, 1,128,16, 1};
+//         if (s == 1 && fx <= 1 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,4, 1,1, 1,32, 1,128,16>, 1,128,16, 1};
+//     }
+
+//     // 4x downsampling (inefficient).
+//     if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 4 && p.down.y() == 1)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 48,1, 32,8,1>, 32,8,1, 1};
+//         if (s != 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 32,1, 32,8,1>, 32,8,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 48 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 48,1, 32,1,8>, 32,1,8, 1};
+//         if (s == 1 && fx <= 32 && fy <= 1) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 4,1, 32,1, 32,1,8>, 32,1,8, 1};
+//     }
+//     if (p.up.x() == 1 && p.up.y() == 1 && p.down.x() == 1 && p.down.y() == 4)
+//     {
+//         // contiguous
+//         if (s != 1 && fx <= 1 && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,48, 32,8,1>, 32,8,1, 1};
+//         if (s != 1 && fx <= 1 && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,32, 32,8,1>, 32,8,1, 1};
+//         // channels_last
+//         if (s == 1 && fx <= 1  && fy <= 48) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,48, 1,32,8>, 1,32,8, 1};
+//         if (s == 1 && fx <= 1  && fy <= 32) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,4, 1,32, 1,32,8>, 1,32,8, 1};
+//     }
+//     return spec;
+// }
 
 //------------------------------------------------------------------------
 // Template specializations.
 
-template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<double>   (const upfirdn2d_kernel_params& p);
-template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<float>    (const upfirdn2d_kernel_params& p);
-template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<c10::Half>(const upfirdn2d_kernel_params& p);
+// "large" kernel specializations
+template void run_upfirdn2d_kernel_large<double>(upfirdn2d_kernel_params p, int tileOutW, int tileOutH, int loopMinor, int loopX);
+template void run_upfirdn2d_kernel_large<float>(upfirdn2d_kernel_params p, int tileOutW, int tileOutH, int loopMinor, int loopX);
+template void run_upfirdn2d_kernel_large<c10::Half>(upfirdn2d_kernel_params p, int tileOutW, int tileOutH, int loopMinor, int loopX);
+
+
+#define SPEC_with_type(...) \
+    template void run_upfirdn2d_kernel_small<__VA_ARGS__>(upfirdn2d_kernel_params p);
+
+#define SPEC(...) \
+    SPEC_with_type(double, __VA_ARGS__) \
+    SPEC_with_type(float, __VA_ARGS__) \
+    SPEC_with_type(c10::Half, __VA_ARGS__)
+
+// Instead of writing full specializations for all the variants of the "small" kernel and it data type (~300 difficult-to-read lines like this):
+//   template void run_upfirdn2d_kernel_small<double, 1, 1, 1, 4, 1, 48, 32, 8, 1>(upfirdn2d_kernel_params p);
+//   template void run_upfirdn2d_kernel_small<float, 1, 1, 1, 4, 1, 48, 32, 8, 1>(upfirdn2d_kernel_params p);
+//   template void run_upfirdn2d_kernel_small<c10::Half, 1, 1, 1, 4, 1, 48, 32, 8, 1>(upfirdn2d_kernel_params p);
+// we can just write "SPEC(params)", e.g. "SPEC(1, 1, 1, 4, 1, 48, 32, 8, 1)" to make specializations for all types of one kernel variation with a single line.
+// These lines can be generated automatically from the `.cpp` file from where the `run_upfirdn2d_kernel_small<...>` functions are called, using the following command:
+//   grep 'run_upfirdn2d_kernel_small<T, .*>(p)' torch_utils/ops/upfirdn2d.cpp | sed 's/.*run_upfirdn2d_kernel_small<T, *\(.*\)>.*/SPEC(\1)/'
+
+SPEC(1,1, 1,4, 1,32, 1,32,8)
+SPEC(1,1, 1,4, 1,48, 1,32,8)
+SPEC(1,1, 1,4, 1,32, 32,8,1)
+SPEC(1,1, 1,4, 1,48, 32,8,1)
+SPEC(1,1, 4,1, 32,1, 32,1,8)
+SPEC(1,1, 4,1, 48,1, 32,1,8)
+SPEC(1,1, 4,1, 32,1, 32,8,1)
+SPEC(1,1, 4,1, 48,1, 32,8,1)
+SPEC(1,4, 1,1, 1,32, 1,128,16)
+SPEC(1,4, 1,1, 1,48, 1,128,16)
+SPEC(1,4, 1,1, 1,32, 32,32,1)
+SPEC(1,4, 1,1, 1,48, 32,32,1)
+SPEC(4,1, 1,1, 32,1, 128,1,16)
+SPEC(4,1, 1,1, 48,1, 128,1,16)
+SPEC(4,1, 1,1, 32,1, 128,8,1)
+SPEC(4,1, 1,1, 48,1, 128,8,1)
+SPEC(4,4, 1,1, 32,32, 32,32,1)
+SPEC(4,4, 1,1, 48,48, 32,32,1)
+SPEC(4,4, 1,1, 32,32, 64,32,1)
+SPEC(4,4, 1,1, 48,48, 64,32,1)
+SPEC(1,1, 1,2, 1,8,  1,64,8)
+SPEC(1,1, 1,2, 1,16, 1,64,8)
+SPEC(1,1, 1,2, 1,24, 1,64,8)
+SPEC(1,1, 1,2, 1,8,  32,16,1)
+SPEC(1,1, 1,2, 1,16, 32,16,1)
+SPEC(1,1, 1,2, 1,24, 32,16,1)
+SPEC(1,1, 2,1, 8,1,  64,1,8)
+SPEC(1,1, 2,1, 16,1, 64,1,8)
+SPEC(1,1, 2,1, 24,1, 64,1,8)
+SPEC(1,1, 2,1, 8,1,  64,8,1)
+SPEC(1,1, 2,1, 16,1, 64,8,1)
+SPEC(1,1, 2,1, 24,1, 64,8,1)
+SPEC(1,1, 2,2, 2,2,   8,8,8)
+SPEC(1,1, 2,2, 4,4,   8,8,8)
+SPEC(1,1, 2,2, 6,6,   8,8,8)
+SPEC(1,1, 2,2, 8,8,   8,8,8)
+SPEC(1,1, 2,2, 16,16, 16,16,1)
+SPEC(1,1, 2,2, 24,24, 16,16,1)
+SPEC(1,1, 2,2, 2,2,   32,8,1)
+SPEC(1,1, 2,2, 4,4,   32,8,1)
+SPEC(1,1, 2,2, 6,6,   32,8,1)
+SPEC(1,1, 2,2, 8,8,   32,8,1)
+SPEC(1,1, 2,2, 16,16, 32,16,1)
+SPEC(1,1, 2,2, 24,24, 32,16,1)
+SPEC(1,2, 1,1, 1,8,  1,128,16)
+SPEC(1,2, 1,1, 1,16, 1,128,16)
+SPEC(1,2, 1,1, 1,24, 1,128,16)
+SPEC(1,2, 1,1, 1,8,  32,32,1)
+SPEC(1,2, 1,1, 1,16, 32,32,1)
+SPEC(1,2, 1,1, 1,24, 32,32,1)
+SPEC(2,1, 1,1, 8,1,  128,1,16)
+SPEC(2,1, 1,1, 16,1, 128,1,16)
+SPEC(2,1, 1,1, 24,1, 128,1,16)
+SPEC(2,1, 1,1, 8,1,  128,8,1)
+SPEC(2,1, 1,1, 16,1, 128,8,1)
+SPEC(2,1, 1,1, 24,1, 128,8,1)
+SPEC(2,2, 1,1, 2,2,   16,16,8)
+SPEC(2,2, 1,1, 4,4,   16,16,8)
+SPEC(2,2, 1,1, 6,6,   16,16,8)
+SPEC(2,2, 1,1, 8,8,   16,16,8)
+SPEC(2,2, 1,1, 16,16, 32,32,1)
+SPEC(2,2, 1,1, 24,24, 32,32,1)
+SPEC(2,2, 1,1, 2,2,   64,16,1)
+SPEC(2,2, 1,1, 4,4,   64,16,1)
+SPEC(2,2, 1,1, 6,6,   64,16,1)
+SPEC(2,2, 1,1, 8,8,   64,16,1)
+SPEC(2,2, 1,1, 16,16, 64,32,1)
+SPEC(2,2, 1,1, 24,24, 64,32,1)
+SPEC(1,1, 1,1, 1,8,   1,128,16)
+SPEC(1,1, 1,1, 1,16,  1,128,16)
+SPEC(1,1, 1,1, 1,24,  1,128,16)
+SPEC(1,1, 1,1, 8,1,   128,1,16)
+SPEC(1,1, 1,1, 16,1,  128,1,16)
+SPEC(1,1, 1,1, 24,1,  128,1,16)
+SPEC(1,1, 1,1, 3,3,   16,16,8)
+SPEC(1,1, 1,1, 4,4,   16,16,8)
+SPEC(1,1, 1,1, 5,5,   16,16,8)
+SPEC(1,1, 1,1, 6,6,   16,16,8)
+SPEC(1,1, 1,1, 7,7,   16,16,8)
+SPEC(1,1, 1,1, 16,16, 32,32,1)
+SPEC(1,1, 1,1, 24,24, 32,32,1)
+SPEC(1,1, 1,1, 1,8,   32,32,1)
+SPEC(1,1, 1,1, 1,16,  32,32,1)
+SPEC(1,1, 1,1, 1,24,  32,32,1)
+SPEC(1,1, 1,1, 8,1,   128,8,1)
+SPEC(1,1, 1,1, 16,1,  128,8,1)
+SPEC(1,1, 1,1, 24,1,  128,8,1)
+SPEC(1,1, 1,1, 3,3,   64,16,1)
+SPEC(1,1, 1,1, 4,4,   64,16,1)
+SPEC(1,1, 1,1, 5,5,   64,16,1)
+SPEC(1,1, 1,1, 6,6,   64,16,1)
+SPEC(1,1, 1,1, 7,7,   64,16,1)
+SPEC(1,1, 1,1, 16,16, 64,32,1)
+SPEC(1,1, 1,1, 24,24, 64,32,1)
+// //------------------------------------------------------------------------
+// template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<double>   (const upfirdn2d_kernel_params& p);
+// template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<float>    (const upfirdn2d_kernel_params& p);
+// template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<c10::Half>(const upfirdn2d_kernel_params& p);
 
 //------------------------------------------------------------------------

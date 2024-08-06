@@ -1,0 +1,768 @@
+No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda-12.5'
+Setting up PyTorch plugin "filtered_lrelu_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py310_xpu as PyTorch extensions root...
+filtered_lrelu_plugin /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630 ['/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.cpp', '/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_wr.dp.cpp', '/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_rd.dp.cpp', '/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_ns.dp.cpp'] {}
+==================
+ /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx 
+==========================
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/build.ninja...
+Building extension module filtered_lrelu_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/5] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu_wr.dp.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_wr.dp.cpp -o filtered_lrelu_wr.dp.o 
+FAILED: filtered_lrelu_wr.dp.o 
+/export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu_wr.dp.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_wr.dp.cpp -o filtered_lrelu_wr.dp.o 
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_wr.dp.cpp:11:
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:147:19: error: static declaration of 'copy_filters' follows non-static declaration
+  147 | static dpct::err0 copy_filters(dpct::queue_ptr stream) try {
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.h:95:12: note: previous declaration is here
+   95 | dpct::err0 copy_filters(dpct::queue_ptr stream);
+      |            ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_wr.dp.cpp:11:
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:201:35: error: unknown type name 'scalar_t'
+  201 |                                   scalar_t *s_buf0_st)
+      |                                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1830:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1830 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/1,1,  /*mode*/MODE_FUFD, /*tw,th,warps,xrep,wskip*/64,  178, 32,  0,  0) // 1t-upf1-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_wr.dp.cpp:16:37: note: in instantiation of function template specialization 'choose_filtered_lrelu_kernel<c10::Half, int, true, false>' requested here
+   16 | template filtered_lrelu_kernel_spec choose_filtered_lrelu_kernel<c10::Half, int32_t, true, false>(const filtered_lrelu_kernel_params& p, int sharedKB);
+      |                                     ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1831:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1831 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/152, 95,  16,  0,  0) // 4t-ups2-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1832:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1832 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  22,  16,  0,  0) // 4t-upf1-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1833:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1833 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  29,  16,  11, 0) // 4t-ups2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1834:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1834 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/60,  28,  16,  0,  0) // 4t-upf2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1835:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1835 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  28,  16,  0,  0) // 4t-ups2-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1836:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1836 |     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  31,  16,  11, 0) // 4t-ups4-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1837:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1837 |     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  36,  16,  0,  0) // 4t-ups4-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1838:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1838 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  22,  16,  12, 0) // 4t-ups2-downs4
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1839:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1839 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/29,  15,  16,  0,  0) // 4t-upf2-downs4
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1840:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1840 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/96,  150, 28,  0,  0) // 6t-ups2-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1841:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1841 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  35,  24,  0,  0) // 6t-upf1-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1842:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1842 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  16,  10, 0) // 6t-ups2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1843:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1843 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/58,  28,  24,  8,  0) // 6t-upf2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1844:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1844 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/52,  28,  16,  0,  0) // 6t-ups2-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1845:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1845 |     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  51,  16,  5,  0) // 6t-ups4-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1846:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1846 |     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  56,  16,  6,  0) // 6t-ups4-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+[2/5] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu_ns.dp.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_ns.dp.cpp -o filtered_lrelu_ns.dp.o 
+FAILED: filtered_lrelu_ns.dp.o 
+/export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu_ns.dp.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_ns.dp.cpp -o filtered_lrelu_ns.dp.o 
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_ns.dp.cpp:11:
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:147:19: error: static declaration of 'copy_filters' follows non-static declaration
+  147 | static dpct::err0 copy_filters(dpct::queue_ptr stream) try {
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.h:95:12: note: previous declaration is here
+   95 | dpct::err0 copy_filters(dpct::queue_ptr stream);
+      |            ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_ns.dp.cpp:11:
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:201:35: error: unknown type name 'scalar_t'
+  201 |                                   scalar_t *s_buf0_st)
+      |                                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1830:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1830 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/1,1,  /*mode*/MODE_FUFD, /*tw,th,warps,xrep,wskip*/64,  178, 32,  0,  0) // 1t-upf1-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_ns.dp.cpp:16:37: note: in instantiation of function template specialization 'choose_filtered_lrelu_kernel<c10::Half, int, false, false>' requested here
+   16 | template filtered_lrelu_kernel_spec choose_filtered_lrelu_kernel<c10::Half, int32_t, false, false>(const filtered_lrelu_kernel_params& p, int sharedKB);
+      |                                     ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1831:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1831 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/152, 95,  16,  0,  0) // 4t-ups2-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1832:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1832 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  22,  16,  0,  0) // 4t-upf1-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1833:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1833 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  29,  16,  11, 0) // 4t-ups2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1834:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1834 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/60,  28,  16,  0,  0) // 4t-upf2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1835:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1835 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  28,  16,  0,  0) // 4t-ups2-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1836:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1836 |     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  31,  16,  11, 0) // 4t-ups4-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1837:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1837 |     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  36,  16,  0,  0) // 4t-ups4-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1838:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1838 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  22,  16,  12, 0) // 4t-ups2-downs4
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1839:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1839 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/29,  15,  16,  0,  0) // 4t-upf2-downs4
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1840:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1840 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/96,  150, 28,  0,  0) // 6t-ups2-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1841:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1841 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  35,  24,  0,  0) // 6t-upf1-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1842:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1842 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  16,  10, 0) // 6t-ups2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1843:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1843 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/58,  28,  24,  8,  0) // 6t-upf2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1844:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1844 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/52,  28,  16,  0,  0) // 6t-ups2-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1845:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1845 |     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  51,  16,  5,  0) // 6t-ups4-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1846:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1846 |     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  56,  16,  6,  0) // 6t-ups4-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+[3/5] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu_rd.dp.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_rd.dp.cpp -o filtered_lrelu_rd.dp.o 
+FAILED: filtered_lrelu_rd.dp.o 
+/export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu_rd.dp.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_rd.dp.cpp -o filtered_lrelu_rd.dp.o 
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_rd.dp.cpp:11:
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:147:19: error: static declaration of 'copy_filters' follows non-static declaration
+  147 | static dpct::err0 copy_filters(dpct::queue_ptr stream) try {
+      |                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.h:95:12: note: previous declaration is here
+   95 | dpct::err0 copy_filters(dpct::queue_ptr stream);
+      |            ^
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_rd.dp.cpp:11:
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:201:35: error: unknown type name 'scalar_t'
+  201 |                                   scalar_t *s_buf0_st)
+      |                                   ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1830:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1830 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/1,1,  /*mode*/MODE_FUFD, /*tw,th,warps,xrep,wskip*/64,  178, 32,  0,  0) // 1t-upf1-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu_rd.dp.cpp:16:37: note: in instantiation of function template specialization 'choose_filtered_lrelu_kernel<c10::Half, int, false, true>' requested here
+   16 | template filtered_lrelu_kernel_spec choose_filtered_lrelu_kernel<c10::Half, int32_t, false, true>(const filtered_lrelu_kernel_params& p, int sharedKB);
+      |                                     ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1831:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1831 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/152, 95,  16,  0,  0) // 4t-ups2-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1832:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1832 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  22,  16,  0,  0) // 4t-upf1-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1833:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1833 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  29,  16,  11, 0) // 4t-ups2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1834:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1834 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/60,  28,  16,  0,  0) // 4t-upf2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1835:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1835 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  28,  16,  0,  0) // 4t-ups2-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1836:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1836 |     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  31,  16,  11, 0) // 4t-ups4-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1837:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1837 |     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  36,  16,  0,  0) // 4t-ups4-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1838:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1838 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  22,  16,  12, 0) // 4t-ups2-downs4
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1839:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1839 |     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/29,  15,  16,  0,  0) // 4t-upf2-downs4
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1840:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1840 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/96,  150, 28,  0,  0) // 6t-ups2-downf1
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1841:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1841 |     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  35,  24,  0,  0) // 6t-upf1-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1842:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1842 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  16,  10, 0) // 6t-ups2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1843:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1843 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/58,  28,  24,  8,  0) // 6t-upf2-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1844:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1844 |     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/52,  28,  16,  0,  0) // 6t-ups2-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1845:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1845 |     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  51,  16,  5,  0) // 6t-ups4-downs2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1846:5: error: address of overloaded function 'filtered_lrelu_kernel' does not match required type 'void'
+ 1846 |     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  56,  16,  6,  0) // 6t-ups4-downf2
+      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:1816:38: note: expanded from macro 'CASE'
+ 1816 |                     s.exec = (void *)filtered_lrelu_kernel<                    \
+      |                                      ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1817 |                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1818 |                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+      |                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.dp.cpp:198:13: note: candidate function template
+  198 | static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+      |             ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+[4/5] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.cpp -o filtered_lrelu.o 
+FAILED: filtered_lrelu.o 
+/export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF filtered_lrelu.o.d -DTORCH_EXTENSION_NAME=filtered_lrelu_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.cpp -o filtered_lrelu.o 
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/filtered_lrelu_plugin/83092618326902339a4da2edc13818aa-intel-r--uhd-graphics-630/filtered_lrelu.cpp:12:
+/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/ATen/cuda/CUDAContext.h:5:10: fatal error: 'cuda_runtime_api.h' file not found
+    5 | #include <cuda_runtime_api.h>
+      |          ^~~~~~~~~~~~~~~~~~~~
+1 error generated.
+ninja: build stopped: subcommand failed.
+Traceback (most recent call last):
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1101, in _run_ninja_build
+    subprocess.run(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ninja', '-v']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/export/users/zhaojiam/proj/stylegan3/load_test.py", line 38, in <module>
+    load_filtered_lrelu()
+  File "/export/users/zhaojiam/proj/stylegan3/load_test.py", line 24, in load_filtered_lrelu
+    output = filtered_lrelu.filtered_lrelu(
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/ops/filtered_lrelu.py", line 117, in filtered_lrelu
+    if impl == 'xpu' and x.device.type == 'xpu' and _init():
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/ops/filtered_lrelu.py", line 26, in _init
+    _plugin = custom_ops.get_plugin(
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/custom_ops.py", line 141, in get_plugin
+    load(name=module_name, build_directory=cached_build_dir,
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1398, in load
+    return _jit_compile(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1295, in _jit_compile
+    _write_ninja_file_and_build_library(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 949, in _write_ninja_file_and_build_library
+    _run_ninja_build(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1118, in _run_ninja_build
+    raise RuntimeError(message) from e
+RuntimeError: Error building extension 'filtered_lrelu_plugin'

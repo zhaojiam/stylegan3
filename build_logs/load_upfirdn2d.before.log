@@ -1,0 +1,164 @@
+No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda-12.5'
+Setting up PyTorch plugin "upfirdn2d_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py310_xpu as PyTorch extensions root...
+upfirdn2d_plugin /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630 ['/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.cpp', '/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp'] {}
+==================
+ /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx 
+==========================
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/build.ninja...
+Building extension module upfirdn2d_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF upfirdn2d.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.cpp -o upfirdn2d.o 
+FAILED: upfirdn2d.o 
+/export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF upfirdn2d.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.cpp -o upfirdn2d.o 
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.cpp:12:
+/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/ATen/cuda/CUDAContext.h:5:10: fatal error: 'cuda_runtime_api.h' file not found
+    5 | #include <cuda_runtime_api.h>
+      |          ^~~~~~~~~~~~~~~~~~~~
+1 error generated.
+[2/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF upfirdn2d.dp.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp -o upfirdn2d.dp.o 
+FAILED: upfirdn2d.dp.o 
+/export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF upfirdn2d.dp.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp -o upfirdn2d.dp.o 
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:131:54: error: unknown type name 'scalar_t'
+  131 |                        sycl::local_accessor<volatile scalar_t, 2> sf,
+      |                                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:132:54: error: unknown type name 'scalar_t'
+  132 |                        sycl::local_accessor<volatile scalar_t, 3> sx)
+      |                                                      ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:281:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  281 |         if (s != 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,24, 64,32,1>, 64,32,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:446:32: note: in instantiation of function template specialization 'choose_upfirdn2d_kernel<double>' requested here
+  446 | template upfirdn2d_kernel_spec choose_upfirdn2d_kernel<double>   (const upfirdn2d_kernel_params& p);
+      |                                ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:282:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  282 |         if (s != 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,16, 64,32,1>, 64,32,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:283:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  283 |         if (s != 1 && fx <= 7  && fy <= 7 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 7,7,   64,16,1>, 64,16,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:284:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  284 |         if (s != 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 6,6,   64,16,1>, 64,16,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:285:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  285 |         if (s != 1 && fx <= 5  && fy <= 5 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 5,5,   64,16,1>, 64,16,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:286:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  286 |         if (s != 1 && fx <= 4  && fy <= 4 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 4,4,   64,16,1>, 64,16,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:287:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  287 |         if (s != 1 && fx <= 3  && fy <= 3 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 3,3,   64,16,1>, 64,16,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:288:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  288 |         if (s != 1 && fx <= 24 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,1,  128,8,1>, 128,8,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:289:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  289 |         if (s != 1 && fx <= 16 && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,1,  128,8,1>, 128,8,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:290:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  290 |         if (s != 1 && fx <= 8  && fy <= 1 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 8,1,   128,8,1>, 128,8,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:291:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  291 |         if (s != 1 && fx <= 1  && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,24,  32,32,1>, 32,32,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:292:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  292 |         if (s != 1 && fx <= 1  && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,16,  32,32,1>, 32,32,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:293:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  293 |         if (s != 1 && fx <= 1  && fy <= 8 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 1,8,   32,32,1>, 32,32,1, 1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:295:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  295 |         if (s == 1 && fx <= 24 && fy <= 24) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 24,24, 32,32,1>,  32,32,1,  1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:296:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  296 |         if (s == 1 && fx <= 16 && fy <= 16) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 16,16, 32,32,1>,  32,32,1,  1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:297:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  297 |         if (s == 1 && fx <= 7  && fy <= 7 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 7,7,   16,16,8>,  16,16,8,  1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:298:60: error: address of overloaded function 'upfirdn2d_kernel_small' does not match required type 'void'
+  298 |         if (s == 1 && fx <= 6  && fy <= 6 ) spec = {(void*)upfirdn2d_kernel_small<T, 1,1, 1,1, 6,6,   16,16,8>,  16,16,8,  1};
+      |                                                            ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/bcddbf1a4519dc3b46b3533060ae3e42-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:129:1: note: candidate function template
+  129 | upfirdn2d_kernel_small(upfirdn2d_kernel_params p,
+      | ^
+fatal error: too many errors emitted, stopping now [-ferror-limit=]
+20 errors generated.
+ninja: build stopped: subcommand failed.
+Traceback (most recent call last):
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1101, in _run_ninja_build
+    subprocess.run(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ninja', '-v']' returned non-zero exit status 1.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/export/users/zhaojiam/proj/stylegan3/load_test.py", line 39, in <module>
+    load_upfirdn2d()
+  File "/export/users/zhaojiam/proj/stylegan3/load_test.py", line 33, in load_upfirdn2d
+    output = upfirdn2d.upfirdn2d(x, f=f, up=2, down=2, padding=1, flip_filter=False, gain=1, impl='xpu')
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/ops/upfirdn2d.py", line 163, in upfirdn2d
+    if impl == 'xpu' and x.device.type == 'xpu' and _init():
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/ops/upfirdn2d.py", line 26, in _init
+    _plugin = custom_ops.get_plugin(
+  File "/export/users/zhaojiam/proj/stylegan3/torch_utils/custom_ops.py", line 141, in get_plugin
+    load(name=module_name, build_directory=cached_build_dir,
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1398, in load
+    return _jit_compile(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1295, in _jit_compile
+    _write_ninja_file_and_build_library(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 949, in _write_ninja_file_and_build_library
+    _run_ninja_build(
+  File "/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/xpu/cpp_extension.py", line 1118, in _run_ninja_build
+    raise RuntimeError(message) from e
+RuntimeError: Error building extension 'upfirdn2d_plugin'

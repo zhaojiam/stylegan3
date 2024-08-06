@@ -16,9 +16,9 @@ def load_bias():
     output = bias_act.bias_act(x=x, b=b, dim=1, act='relu', alpha=0.2, gain=1, clamp=5, impl='xpu')
     print(output)
 
-def load_filterd_lrelu():
-    x = torch.randn(4, 3, 64, 64).to('xpu')
-    b = torch.randn(3).to('xpu')
+def load_filtered_lrelu():
+    x = torch.randn(4, 3, 64, 64, dtype=torch.float32).to('xpu')
+    b = torch.randn(3, dtype=torch.float32).to('xpu')
     fu = torch.tensor([[1,2,1],[2,4,2],[1,2,1]], dtype=torch.float32).to('xpu') / 16
     fd = torch.tensor([[1,2,1],[2,4,2],[1,2,1]], dtype=torch.float32).to('xpu') / 16
     output = filtered_lrelu.filtered_lrelu(
@@ -35,5 +35,5 @@ def load_upfirdn2d():
 
 if __name__ == '__main__':
     # load_bias()
-    load_filterd_lrelu()
-    # load_upfirdn2d()
+    # load_filtered_lrelu()
+    load_upfirdn2d()

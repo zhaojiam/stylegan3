@@ -8,20 +8,24 @@
 
 #include <sycl/sycl.hpp>
 #include <dpct/dpct.hpp>
-#include <c10/util/Half.h>
 #include "filtered_lrelu.h"
+#include <sycl/accessor.hpp>
+#include <ipex.h>
+#include <torch/extension.h>
+#include <c10/util/Half.h>
 #include <cstdint>
+#include <cmath>
 
 //------------------------------------------------------------------------
 // Helpers.
 
-enum // Filter modes.
-{
-    MODE_SUSD = 0,  // Separable upsampling, separable downsampling.
-    MODE_FUSD = 1,  // Full upsampling, separable downsampling.
-    MODE_SUFD = 2,  // Separable upsampling, full downsampling.
-    MODE_FUFD = 3,  // Full upsampling, full downsampling.
-};
+// enum // Filter modes.
+// {
+//     MODE_SUSD = 0,  // Separable upsampling, separable downsampling.
+//     MODE_FUSD = 1,  // Full upsampling, separable downsampling.
+//     MODE_SUFD = 2,  // Separable upsampling, full downsampling.
+//     MODE_FUFD = 3,  // Full upsampling, full downsampling.
+// };
 
 template <class T> struct InternalType;
 template <> struct InternalType<double>
@@ -36,6 +40,7 @@ template <> struct InternalType<double>
         return sycl::fmin(sycl::fmax(x, -c), c);
     }
 };
+
 template <> struct InternalType<float>
 {
     typedef float scalar_t; typedef sycl::float2 vec2_t;
@@ -48,6 +53,7 @@ template <> struct InternalType<float>
         return sycl::fmin(sycl::fmax(x, -c), c);
     }
 };
+
 template <> struct InternalType<c10::Half>
 {
     typedef float scalar_t; typedef sycl::float2 vec2_t;
@@ -92,7 +98,10 @@ template <class T> __dpct_inline__ T get_stride(const int64_t &x)
 #define MAX_FILTER_SIZE 32
 
 // Combined up/down filter buffers so that transfer can be done with one copy.
-dpct::global_memory<float, 1> g_fbuf(
+// dpct::global_memory<float, 1> g_fbuf(
+//     2 * MAX_FILTER_SIZE *
+//     MAX_FILTER_SIZE); // Filters in global memory, written by setup kernel.
+static dpct::global_memory<float, 1> g_fbuf(
     2 * MAX_FILTER_SIZE *
     MAX_FILTER_SIZE); // Filters in global memory, written by setup kernel.
 static dpct::constant_memory<float, 1>
@@ -185,20 +194,31 @@ catch (sycl::exception const &exc) {
  // When sharedKB <= 48, allocate shared memory statically inside the kernel,
  // otherwise use the externally allocated shared memory buffer.
 
-template <class T, class index_t, int sharedKB, bool signWrite, bool signRead,
+// template <class T, class index_t, int sharedKB, bool signWrite, bool signRead,
+//           int filterMode, int up, int fuSize, int down, int fdSize,
+//           int tileOutW, int tileOutH, int threadsPerBlock, bool enableXrep,
+//           bool enableWriteSkip>
+template <class T, class index_t, bool signWrite, bool signRead,
           int filterMode, int up, int fuSize, int down, int fdSize,
           int tileOutW, int tileOutH, int threadsPerBlock, bool enableXrep,
-          bool enableWriteSkip>
+          bool enableWriteSkip, class AccessorT
+          >
 /*
 DPCT1110:0: The total declared local variable size in device function
 filtered_lrelu_kernel exceeds 128 bytes and may cause high register pressure.
 Consult with your hardware vendor to find the total register size available and
 adjust the code, or use smaller sub-group size to avoid high register pressure.
 */
+// static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
+//                                   const sycl::nd_item<3> &item_ct1,
+//                                   float const *c_fbuf, char *s_buf_raw,
+//                                   scalar_t *s_buf0_st)
 static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                                   const sycl::nd_item<3> &item_ct1,
-                                  float const *c_fbuf, char *s_buf_raw,
-                                  scalar_t *s_buf0_st)
+                                  float *c_fbuf,
+                                  typename InternalType<T>::scalar_t *s_buf0_st,
+                                  AccessorT yacc
+                                  )
 {
     // Check that we don't try to support non-existing filter modes.
     static_assert(up   == 1 || up   == 2 || up   == 4, "only up=1, up=2, up=4 scales supported");
@@ -252,24 +272,25 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
     const int s_buf1_size = (s_buf1_size_base + 3) & ~3;
 
     // Check at compile time that we don't use too much shared memory.
-    static_assert((s_buf0_size + s_buf1_size) * sizeof(scalar_t) <= (sharedKB << 10), "shared memory overflow");
+    // static_assert((s_buf0_size + s_buf1_size) * sizeof(scalar_t) <= (sharedKB << 10), "shared memory overflow");
 
     // Declare shared memory arrays.
     scalar_t* s_buf0;
     scalar_t* s_buf1;
-    if (sharedKB <= 48)
-    {
+
+    // if (sharedKB <= 48)
+    // {
         // Allocate shared memory arrays here.
         // Prevent launching if this isn't optimized away when unused.
         s_buf0 = s_buf0_st;
         s_buf1 = s_buf0 + s_buf0_size;
-    }
-    else
-    {
-        // Use the dynamically allocated shared memory array.
-        s_buf0 = (scalar_t*)s_buf_raw;
-        s_buf1 = s_buf0 + s_buf0_size;
-    }
+    // }
+    // else
+    // {
+    //     // Use the dynamically allocated shared memory array.
+    //     s_buf0 = (scalar_t*)s_buf_raw;
+    //     s_buf1 = s_buf0 + s_buf0_size;
+    // }
 
     // Pointers to the buffers.
     scalar_t* s_tileIn;       // Input tile:                      [relInX * tileInH + relInY]
@@ -348,7 +369,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
+            item_ct1.barrier(sycl::access::fence_space::local_space);
 
         // Load input tile & apply bias. Unrolled.
         scalar_t b = (scalar_t)*(const T*)((const char*)p.b + (channelIdx * get_stride<index_t>(p.bStride)));
@@ -392,7 +413,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
+            item_ct1.barrier(sycl::access::fence_space::local_space);
             if (up == 4)
             {
                 for (int idx = item_ct1.get_local_id(2) * up;
@@ -510,7 +531,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
+            item_ct1.barrier(sycl::access::fence_space::local_space);
             int groupMask = 15 << ((item_ct1.get_local_id(2) & 31) & ~3);
             int minY = tileOutY ? (tileOutY - tileOutH) * down + tileUpH : 0; // Skip already written signs.
             int sShapeMaxY = MIN(p.sShape.y(),
@@ -1008,13 +1029,17 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                                 x * get_stride<index_t>(p.yStride.x()) +
                                 y * get_stride<index_t>(p.yStride.y()) +
                                 mapOfsOut;
-                            if ((uint32_t)y + 0 < p.yShape.y()) *
-                                ((T *)((char *)p.y + ofs)) =
-                                (T)(v.x() * (scalar_t)c_fd[0]);
-                            if ((uint32_t)y + 1 < ymax) *
-                                ((T *)((char *)p.y + ofs +
-                                       get_stride<index_t>(p.yStride.y()))) =
-                                (T)(v.y() * (scalar_t)c_fd[0]);
+                            // if ((uint32_t)y + 0 < p.yShape.y()) *
+                            //     ((T *)((char *)p.y + ofs)) =
+                            //     (T)(v.x() * (scalar_t)c_fd[0]);
+                            // if ((uint32_t)y + 1 < ymax) *
+                            //     ((T *)((char *)p.y + ofs +
+                            //            get_stride<index_t>(p.yStride.y()))) =
+                            //     (T)(v.y() * (scalar_t)c_fd[0]);
+                            if ((uint32_t)y + 0 < p.yShape.y())
+                                (T&)(yacc[ofs]) = (T)(v.x() * (scalar_t)c_fd[0]);
+                            if ((uint32_t)y + 1 < ymax)
+                                (T&)(yacc[ofs + get_stride<index_t>(p.yStride.y())]) = (T)(v.y() * (scalar_t)c_fd[0]);
                         }
                     }
                 }
@@ -1037,7 +1062,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                 sycl::nd_item::barrier(sycl::access::fence_space::local_space)
                 for better performance if there is no access to global memory.
                 */
-                item_ct1.barrier();
+                item_ct1.barrier(sycl::access::fence_space::local_space);
                 int minY = tileOutY ? (tileOutY - tileOutH) * down + tileUpH +
                                           p.sOfs.y()
                                     : 0; // Skip already written signs.
@@ -1249,7 +1274,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                 sycl::nd_item::barrier(sycl::access::fence_space::local_space)
                 for better performance if there is no access to global memory.
                 */
-                item_ct1.barrier();
+                item_ct1.barrier(sycl::access::fence_space::local_space);
                 uint32_t groupMask = 15
                                      << ((item_ct1.get_local_id(2) & 31) & ~3);
                 int minY = tileOutY ? (tileOutY - tileOutH) * down + tileUpH : 0; // Skip already written signs.
@@ -1391,10 +1416,13 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                              (uint32_t)y <
                                  p.yShape
                                      .y()) // Write directly into output buffer
-                        *((T *)((char *)p.y +
-                                (x * get_stride<index_t>(p.yStride.x()) +
-                                 y * get_stride<index_t>(p.yStride.y()) +
-                                 mapOfsOut))) = (T)(v * (scalar_t)c_fd[0]);
+                        // *((T *)((char *)p.y +
+                        //         (x * get_stride<index_t>(p.yStride.x()) +
+                        //          y * get_stride<index_t>(p.yStride.y()) +
+                        //          mapOfsOut))) = (T)(v * (scalar_t)c_fd[0]);
+                        (T&)(yacc[x * get_stride<index_t>(p.yStride.x()) +
+                             y * get_stride<index_t>(p.yStride.y()) +
+                             mapOfsOut]) = (T)(v * (scalar_t)c_fd[0]);
                 }
             }
         }
@@ -1412,7 +1440,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
+            item_ct1.barrier(sycl::access::fence_space::local_space);
             if (down == 4 && tileOutW % 4 == 0)
             {
                 // Calculate 4 pixels at a time.
@@ -1496,7 +1524,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
             sycl::nd_item::barrier(sycl::access::fence_space::local_space) for
             better performance if there is no access to global memory.
             */
-            item_ct1.barrier();
+            item_ct1.barrier(sycl::access::fence_space::local_space);
             for (int idx = item_ct1.get_local_id(2); idx < tileOutW * tileOutH;
                  idx += item_ct1.get_local_range(2))
             {
@@ -1513,10 +1541,13 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                 int outY = tileOutY + relOutY0;
 
                 if (outX < p.yShape.x() & outY < p.yShape.y())
-                    *((T *)((char *)p.y +
-                            (outX * get_stride<index_t>(p.yStride.x()) +
-                             outY * get_stride<index_t>(p.yStride.y()) +
-                             mapOfsOut))) = (T)v;
+                    // *((T *)((char *)p.y +
+                    //         (outX * get_stride<index_t>(p.yStride.x()) +
+                    //          outY * get_stride<index_t>(p.yStride.y()) +
+                    //          mapOfsOut))) = (T)v;
+                    (T&)(yacc[outX * get_stride<index_t>(p.yStride.x()) +
+                         outY * get_stride<index_t>(p.yStride.y()) +
+                         mapOfsOut]) = (T)v;
             }
         }
         else if (filterMode == MODE_SUFD || filterMode == MODE_FUFD)
@@ -1535,7 +1566,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                 sycl::nd_item::barrier(sycl::access::fence_space::local_space)
                 for better performance if there is no access to global memory.
                 */
-                item_ct1.barrier();
+                item_ct1.barrier(sycl::access::fence_space::local_space);
                 for (int idx = item_ct1.get_local_id(2) * 2;
                      idx < tileOutW * tileOutH;
                      idx += item_ct1.get_local_range(2) * 2)
@@ -1565,12 +1596,16 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                             outX * get_stride<index_t>(p.yStride.x()) +
                             outY * get_stride<index_t>(p.yStride.y()) +
                             mapOfsOut;
-                        if (outX + 0 < p.yShape.x()) *
-                            ((T *)((char *)p.y + ofs)) = (T)v.x();
-                        if (outX + 1 < p.yShape.x()) *
-                            ((T *)((char *)p.y + ofs +
-                                   get_stride<index_t>(p.yStride.x()))) =
-                            (T)v.y();
+                        // if (outX + 0 < p.yShape.x()) *
+                        //     ((T *)((char *)p.y + ofs)) = (T)v.x();
+                        // if (outX + 1 < p.yShape.x()) *
+                        //     ((T *)((char *)p.y + ofs +
+                        //            get_stride<index_t>(p.yStride.x()))) =
+                        //     (T)v.y();
+                        if (outX + 0 < p.yShape.x())
+                            (T&)(yacc[ofs]) = (T)v.x();
+                        if (outX + 1 < p.yShape.x())
+                            (T&)(yacc[ofs + get_stride<index_t>(p.yStride.x())]) = (T)v.y();
                     }
                 }
             }
@@ -1587,7 +1622,7 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                 sycl::nd_item::barrier(sycl::access::fence_space::local_space)
                 for better performance if there is no access to global memory.
                 */
-                item_ct1.barrier();
+                item_ct1.barrier(sycl::access::fence_space::local_space);
                 for (int idx = item_ct1.get_local_id(2);
                      idx < tileOutW * tileOutH;
                      idx += item_ct1.get_local_range(2))
@@ -1600,10 +1635,13 @@ static void filtered_lrelu_kernel(filtered_lrelu_kernel_params p,
                     int outY = tileOutY + relOutY0;
                     if ((uint32_t)outX < p.yShape.x() &&
                         (uint32_t)outY < p.yShape.y())
-                        *((T *)((char *)p.y +
-                                (outX * get_stride<index_t>(p.yStride.x()) +
-                                 outY * get_stride<index_t>(p.yStride.y()) +
-                                 mapOfsOut))) = (T)v;
+                        // *((T *)((char *)p.y +
+                        //         (outX * get_stride<index_t>(p.yStride.x()) +
+                        //          outY * get_stride<index_t>(p.yStride.y()) +
+                        //          mapOfsOut))) = (T)v;
+                        (T&)(yacc[outX * get_stride<index_t>(p.yStride.x()) +
+                             outY * get_stride<index_t>(p.yStride.y()) +
+                             mapOfsOut]) = (T)v;
                 }
             }
         }
@@ -1779,88 +1817,291 @@ static void filtered_lrelu_act_kernel(filtered_lrelu_act_kernel_params p,
     }
 }
 
-template <class T, bool signWrite, bool signRead> void* choose_filtered_lrelu_act_kernel(void)
-{
-    return (void*)filtered_lrelu_act_kernel<T, signWrite, signRead>;
-}
+// template <class T, bool signWrite, bool signRead> void* choose_filtered_lrelu_act_kernel(void)
+// {
+//     return (void*)filtered_lrelu_act_kernel<T, signWrite, signRead>;
+// }
 
 //------------------------------------------------------------------------
 // CUDA kernel selection.
 
-template <class T, class index_t, bool signWrite, bool signRead> filtered_lrelu_kernel_spec choose_filtered_lrelu_kernel(const filtered_lrelu_kernel_params& p, int sharedKB)
-{
-    filtered_lrelu_kernel_spec s = { 0 };
+// template <class T, class index_t, bool signWrite, bool signRead> filtered_lrelu_kernel_spec choose_filtered_lrelu_kernel(const filtered_lrelu_kernel_params& p, int sharedKB)
+// {
+//     filtered_lrelu_kernel_spec s = { 0 };
 
-    // Return the first matching kernel.
-#define CASE(SH, U, FU, D, FD, MODE, TW, TH, W, XR, WS)                        \
-    if (sharedKB >= SH)                                                        \
-        if ((p.fuShape.y() == 0 &&                                             \
-             (MODE == MODE_SUSD || MODE == MODE_SUFD)) ||                      \
-            (p.fuShape.y() > 0 && (MODE == MODE_FUSD || MODE == MODE_FUFD)))   \
-            if ((p.fdShape.y() == 0 &&                                         \
-                 (MODE == MODE_SUSD || MODE == MODE_FUSD)) ||                  \
-                (p.fdShape.y() > 0 &&                                          \
-                 (MODE == MODE_SUFD || MODE == MODE_FUFD)))                    \
-                if (p.up == U && p.fuShape.x() <= FU && p.fuShape.y() <= FU && \
-                    p.down == D && p.fdShape.x() <= FD && p.fdShape.y() <= FD) \
-                {                                                              \
-                    static_assert((D * TW % 4) == 0,                           \
-                                  "down * tileWidth must be divisible by 4");  \
-                    static_assert(FU % U == 0,                                 \
-                                  "upscaling filter size must be multiple of " \
-                                  "upscaling factor");                         \
-                    static_assert(FD % D == 0,                                 \
-                                  "downscaling filter size must be multiple "  \
-                                  "of downscaling factor");                    \
-                    s.setup = (void *)setup_filters_kernel;                    \
-                    s.exec = (void *)filtered_lrelu_kernel<                    \
-                        T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
-                        FD, TW, TH, W * 32, !!XR, !!WS>;                       \
-                    s.tileOut = sycl::int2(TW, TH);                            \
-                    s.numWarps = W;                                            \
-                    s.xrep = XR;                                               \
-                    s.dynamicSharedKB = (SH == 48) ? 0 : SH;                   \
-                    return s;                                                  \
-                }
+//     // Return the first matching kernel.
+// #define CASE(SH, U, FU, D, FD, MODE, TW, TH, W, XR, WS)                        \
+//     if (sharedKB >= SH)                                                        \
+//         if ((p.fuShape.y() == 0 &&                                             \
+//              (MODE == MODE_SUSD || MODE == MODE_SUFD)) ||                      \
+//             (p.fuShape.y() > 0 && (MODE == MODE_FUSD || MODE == MODE_FUFD)))   \
+//             if ((p.fdShape.y() == 0 &&                                         \
+//                  (MODE == MODE_SUSD || MODE == MODE_FUSD)) ||                  \
+//                 (p.fdShape.y() > 0 &&                                          \
+//                  (MODE == MODE_SUFD || MODE == MODE_FUFD)))                    \
+//                 if (p.up == U && p.fuShape.x() <= FU && p.fuShape.y() <= FU && \
+//                     p.down == D && p.fdShape.x() <= FD && p.fdShape.y() <= FD) \
+//                 {                                                              \
+//                     static_assert((D * TW % 4) == 0,                           \
+//                                   "down * tileWidth must be divisible by 4");  \
+//                     static_assert(FU % U == 0,                                 \
+//                                   "upscaling filter size must be multiple of " \
+//                                   "upscaling factor");                         \
+//                     static_assert(FD % D == 0,                                 \
+//                                   "downscaling filter size must be multiple "  \
+//                                   "of downscaling factor");                    \
+//                     s.setup = (void *)setup_filters_kernel;                    \
+//                     s.exec = (void *)filtered_lrelu_kernel<                    \
+//                         T, index_t, SH, signWrite, signRead, MODE, U, FU, D,   \
+//                         FD, TW, TH, W * 32, !!XR, !!WS>;                       \
+//                     s.tileOut = sycl::int2(TW, TH);                            \
+//                     s.numWarps = W;                                            \
+//                     s.xrep = XR;                                               \
+//                     s.dynamicSharedKB = (SH == 48) ? 0 : SH;                   \
+//                     return s;                                                  \
+//                 }
 
-    // Launch parameters for various kernel specializations.
-    // Small filters must be listed before large filters, otherwise the kernel for larger filter will always match first.
-    // Kernels that use more shared memory must be listed before those that use less, for the same reason.
+//     // Launch parameters for various kernel specializations.
+//     // Small filters must be listed before large filters, otherwise the kernel for larger filter will always match first.
+//     // Kernels that use more shared memory must be listed before those that use less, for the same reason.
 
-    CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/1,1,  /*mode*/MODE_FUFD, /*tw,th,warps,xrep,wskip*/64,  178, 32,  0,  0) // 1t-upf1-downf1
-    CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/152, 95,  16,  0,  0) // 4t-ups2-downf1
-    CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  22,  16,  0,  0) // 4t-upf1-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  29,  16,  11, 0) // 4t-ups2-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/60,  28,  16,  0,  0) // 4t-upf2-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  28,  16,  0,  0) // 4t-ups2-downf2
-    CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  31,  16,  11, 0) // 4t-ups4-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  36,  16,  0,  0) // 4t-ups4-downf2
-    CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  22,  16,  12, 0) // 4t-ups2-downs4
-    CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/29,  15,  16,  0,  0) // 4t-upf2-downs4
-    CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/96,  150, 28,  0,  0) // 6t-ups2-downf1
-    CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  35,  24,  0,  0) // 6t-upf1-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  16,  10, 0) // 6t-ups2-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/58,  28,  24,  8,  0) // 6t-upf2-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/52,  28,  16,  0,  0) // 6t-ups2-downf2
-    CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  51,  16,  5,  0) // 6t-ups4-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  56,  16,  6,  0) // 6t-ups4-downf2
-    CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/4,24, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  18,  16,  12, 0) // 6t-ups2-downs4
-    CASE(/*sharedKB*/96, /*up,fu*/2,12, /*down,fd*/4,24, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/27,  31,  32,  6,  0) // 6t-upf2-downs4 96kB
-    CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/4,24, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/27,  13,  24,  0,  0) // 6t-upf2-downs4
-    CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/148, 89,  24,  0,  0) // 8t-ups2-downf1
-    CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  31,  16,  5,  0) // 8t-upf1-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/2,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  41,  16,  9,  0) // 8t-ups2-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/2,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  26,  24,  0,  0) // 8t-upf2-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/2,16, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  40,  16,  0,  0) // 8t-ups2-downf2
-    CASE(/*sharedKB*/48, /*up,fu*/4,32, /*down,fd*/2,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  24,  5,  0) // 8t-ups4-downs2
-    CASE(/*sharedKB*/48, /*up,fu*/4,32, /*down,fd*/2,16, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  50,  16,  0,  0) // 8t-ups4-downf2
-    CASE(/*sharedKB*/96, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/24,  24,  32,  12, 1) // 8t-ups2-downs4 96kB
-    CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  13,  16,  10, 1) // 8t-ups2-downs4
-    CASE(/*sharedKB*/96, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/25,  28,  28,  4,  0) // 8t-upf2-downs4 96kB
-    CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/25,  10,  24,  0,  0) // 8t-upf2-downs4
+//     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/1,1,  /*mode*/MODE_FUFD, /*tw,th,warps,xrep,wskip*/64,  178, 32,  0,  0) // 1t-upf1-downf1
+//     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/152, 95,  16,  0,  0) // 4t-ups2-downf1
+//     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  22,  16,  0,  0) // 4t-upf1-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  29,  16,  11, 0) // 4t-ups2-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/60,  28,  16,  0,  0) // 4t-upf2-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  28,  16,  0,  0) // 4t-ups2-downf2
+//     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/56,  31,  16,  11, 0) // 4t-ups4-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/4,16, /*down,fd*/2,8,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/56,  36,  16,  0,  0) // 4t-ups4-downf2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  22,  16,  12, 0) // 4t-ups2-downs4
+//     CASE(/*sharedKB*/48, /*up,fu*/2,8,  /*down,fd*/4,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/29,  15,  16,  0,  0) // 4t-upf2-downs4
+//     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/96,  150, 28,  0,  0) // 6t-ups2-downf1
+//     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  35,  24,  0,  0) // 6t-upf1-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  16,  10, 0) // 6t-ups2-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/58,  28,  24,  8,  0) // 6t-upf2-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/52,  28,  16,  0,  0) // 6t-ups2-downf2
+//     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  51,  16,  5,  0) // 6t-ups4-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/4,24, /*down,fd*/2,12, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  56,  16,  6,  0) // 6t-ups4-downf2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/4,24, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  18,  16,  12, 0) // 6t-ups2-downs4
+//     CASE(/*sharedKB*/96, /*up,fu*/2,12, /*down,fd*/4,24, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/27,  31,  32,  6,  0) // 6t-upf2-downs4 96kB
+//     CASE(/*sharedKB*/48, /*up,fu*/2,12, /*down,fd*/4,24, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/27,  13,  24,  0,  0) // 6t-upf2-downs4
+//     CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/1,1,  /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/148, 89,  24,  0,  0) // 8t-ups2-downf1
+//     CASE(/*sharedKB*/48, /*up,fu*/1,1,  /*down,fd*/2,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/32,  31,  16,  5,  0) // 8t-upf1-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/2,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  41,  16,  9,  0) // 8t-ups2-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/2,16, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/56,  26,  24,  0,  0) // 8t-upf2-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/2,16, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  40,  16,  0,  0) // 8t-ups2-downf2
+//     CASE(/*sharedKB*/48, /*up,fu*/4,32, /*down,fd*/2,16, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/32,  46,  24,  5,  0) // 8t-ups4-downs2
+//     CASE(/*sharedKB*/48, /*up,fu*/4,32, /*down,fd*/2,16, /*mode*/MODE_SUFD, /*tw,th,warps,xrep,wskip*/32,  50,  16,  0,  0) // 8t-ups4-downf2
+//     CASE(/*sharedKB*/96, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/24,  24,  32,  12, 1) // 8t-ups2-downs4 96kB
+//     CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_SUSD, /*tw,th,warps,xrep,wskip*/16,  13,  16,  10, 1) // 8t-ups2-downs4
+//     CASE(/*sharedKB*/96, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/25,  28,  28,  4,  0) // 8t-upf2-downs4 96kB
+//     CASE(/*sharedKB*/48, /*up,fu*/2,16, /*down,fd*/4,32, /*mode*/MODE_FUSD, /*tw,th,warps,xrep,wskip*/25,  10,  24,  0,  0) // 8t-upf2-downs4
 
-    #undef CASE
-    return s; // No kernel found.
+//     #undef CASE
+//     return s; // No kernel found.
+// }
+
+//------------------------------------------------------------------------
+// XPU kernel launchers.
+
+template <class T, class index_t, bool signWrite, bool signRead,
+          int MODE, int U, int FU, int D, int FD, int TW, int TH, int W, int XR,
+          int WS> // TODO: XR and WS could be just booleans and the actual value
+                  // passed as a parameter - to reduce the number of template
+                  // instantiations/specializations (but then duplicate
+                  // specializations would need to be avoided)
+void run_filtered_lrelu_kernel(filtered_lrelu_kernel_params &p) try {
+    //std::cout << "run_filtered_lrelu_kernel" << std::endl;
+    
+    auto device_type = c10::DeviceType::XPU;
+    c10::impl::VirtualGuardImpl impl(device_type);
+    c10::Stream c10_stream = impl.getStream(c10::Device(device_type));
+    auto& queue = xpu::get_queue_from_stream(c10_stream);
+
+    c_fbuf.init(queue);
+    auto c_fbuf_ptr_ct1 = c_fbuf.get_ptr();
+
+    // Launch XPU kernel.
+    int bx = W * 32;
+    int gx = (p.yShape.x() - 1) / TW + 1;
+    int gy = (p.yShape.y() - 1) / TH + 1;
+    int gz = p.yShape.z() * p.yShape.w();
+
+    // Repeat multiple horizontal tiles in a CTA?
+    if (XR)
+    {
+        p.tilesXrep = XR;
+        p.tilesXdim = gx;
+       
+        gx = (gx + p.tilesXrep - 1) / p.tilesXrep;
+        std::swap(gx, gy);
+    }
+    else
+    {
+        p.tilesXrep = 0;
+        p.tilesXdim = 0;
+    }
+
+    // Launch filter setup kernel.
+    /*
+    DPCT1049:0: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
+   auto task = queue.submit([&](sycl::handler &cgh) {
+        g_fbuf.init(queue);
+
+        auto g_fbuf_ptr_ct1 = g_fbuf.get_ptr();
+
+        cgh.parallel_for(sycl::nd_range<3>(sycl::range<3>(1, 1, 1024),
+                                           sycl::range<3>(1, 1, 1024)),
+                         [=](sycl::nd_item<3> item_ct1) {
+                           setup_filters_kernel(p, item_ct1,
+                                                g_fbuf_ptr_ct1);
+                         });
+      });
+
+    // Static definitions. - partially copied from inside the .cu (needed to compute e.g. the buffer sizes)
+    typedef typename InternalType<T>::scalar_t scalar_t;
+    const int tileUpW    = (TW * D + (FD - 1) - (D - 1) + 3) & ~3;  // Upsampled tile width, rounded up to multiple of 4.
+    const int tileUpH    = TH * D + (FD - 1) - (D - 1);             // Upsampled tile height.
+    const int tileInW    = CEIL_DIV(tileUpW  + (FU - 1), U);                   // Input tile width.
+    const int tileInH    = CEIL_DIV(tileUpH  + (FU - 1), U);                   // Input tile height.
+    const int tileUpH_up = CEIL_DIV(tileUpH, U) * U;                              // Upsampled tile height rounded up to a multiple of up.
+    const int tileInH_up = CEIL_DIV(tileUpH_up + (FU - 1), U);                 // For allocations only, to avoid shared memory read overruns with up=2 and up=4.
+
+    // Merge 1x1 downsampling into last upsampling step for upf1 and ups2.
+    const bool downInline = (D == 1) && ((U == 1 && MODE == MODE_FUFD) || (U == 2 && MODE == MODE_SUFD));
+
+    // Sizes of logical buffers.
+    const int szIn    = tileInH_up * tileInW;
+    const int szUpX   = tileInH_up * tileUpW;
+    const int szUpXY  = downInline ? 0 : (tileUpH * tileUpW);
+    const int szDownX = tileUpH * TW;
+
+    // Sizes for shared memory arrays.
+    const int s_buf0_size_base =
+        (MODE == MODE_SUSD) ? MAX(szIn, szUpXY) :
+        (MODE == MODE_FUSD) ? MAX(szIn, szDownX) :
+        (MODE == MODE_SUFD) ? MAX(szIn, szUpXY) :
+        (MODE == MODE_FUFD) ? szIn :
+        -1;
+    const int s_buf1_size_base =
+        (MODE == MODE_SUSD) ? MAX(szUpX, szDownX) :
+        (MODE == MODE_FUSD) ? szUpXY :
+        (MODE == MODE_SUFD) ? szUpX  :
+        (MODE == MODE_FUFD) ? szUpXY :
+        -1;
+
+    // Ensure U128 alignment.
+    const int s_buf0_size = (s_buf0_size_base + 3) & ~3;
+    const int s_buf1_size = (s_buf1_size_base + 3) & ~3;
+
+    task.wait();
+    
+    // Copy kernels to constant memory.
+    if      ( signWrite && !signRead) (copy_filters<true,  false>(&queue));
+    else if (!signWrite &&  signRead) (copy_filters<false, true >(&queue));
+    else if (!signWrite && !signRead) (copy_filters<false, false>(&queue));
+
+    // Launch main kernel.
+    const int maxSubGz = 65535; // CUDA maximum for block z dimension.
+    for (int zofs=0; zofs < gz; zofs += maxSubGz) // Do multiple launches if gz is too big.
+    {
+        p.blockZofs = zofs;
+        int subGz = std::min(maxSubGz, gz - zofs);
+
+        sycl::buffer<char> yBuf((char*)p.y, p.y_nbytes);
+        /*
+        DPCT1049:1: The work-group size passed to the SYCL kernel may exceed the
+        limit. To get the device limit, query info::device::max_work_group_size.
+        Adjust the work-group size if needed.
+        */
+    queue.submit([&](sycl::handler &cgh) {
+
+          sycl::accessor yAccessor(yBuf, cgh, sycl::write_only, sycl::no_init);
+          //sycl::accessor yAccessor(yBuf, cgh, sycl::write_only);
+          //sycl::accessor yAccessor(yBuf, cgh);
+//          T * ptr = yAccessor.get_pointer();
+
+          sycl::local_accessor<scalar_t, 1> s_buf0_st_acc_ct1(
+              s_buf0_size + s_buf1_size,
+              cgh);
+
+          cgh.parallel_for(
+              sycl::nd_range<3>(sycl::range<3>(subGz, gy, gx) *
+                                    sycl::range<3>(1, 1, bx),
+                                sycl::range<3>(1, 1, bx)),
+              [=](sycl::nd_item<3> item_ct1) [[intel::reqd_sub_group_size(
+                  32)]] {
+                filtered_lrelu_kernel<T, index_t, signWrite, signRead, MODE,
+                                      U, FU, D, FD, TW, TH, W * 32, !!XR, !!WS>(
+                    p, item_ct1, c_fbuf_ptr_ct1,
+                    s_buf0_st_acc_ct1.get_pointer(), yAccessor
+                    );
+              });
+        }).wait();
+    }
+}
+catch (sycl::exception const &exc) {
+  std::cerr << exc.what() << "Exception caught at file:" << __FILE__
+            << ", line:" << __LINE__ << std::endl;
+  std::exit(1);
+}
+
+template <class T, bool signWrite, bool signRead>
+void run_filtered_lrelu_act_kernel(filtered_lrelu_act_kernel_params &p) try {
+    //std::cout << "run_filtered_lrelu_act_kernel" << std::endl;
+    // Launch kernel.
+    void* args[] = {&p};
+    int bx = 128; // 4 warps per block.
+
+    // Logical size of launch = writeSigns ? p.s : p.x
+    uint32_t gx = signWrite ? p.sShape.x() : p.xShape.x();
+    uint32_t gy = signWrite ? p.sShape.y() : p.xShape.y();
+    uint32_t gz =
+        p.xShape.z() * p.xShape.w(); // Same as in p.sShape if signs are in use.
+    gx = (gx - 1) / bx + 1;
+
+    // Make sure grid y and z dimensions are within CUDA launch limits. Kernel loops internally to do the rest.
+    const uint32_t gmax = 65535;
+    gy = std::min(gy, gmax);
+    gz = std::min(gz, gmax);
+
+    // Launch.
+    /*
+    DPCT1049:2: The work-group size passed to the SYCL kernel may exceed the
+    limit. To get the device limit, query info::device::max_work_group_size.
+    Adjust the work-group size if needed.
+    */
+  {
+    auto device_type = c10::DeviceType::XPU;
+    c10::impl::VirtualGuardImpl impl(device_type);
+    c10::Stream c10_stream = impl.getStream(c10::Device(device_type));
+    auto& queue = xpu::get_queue_from_stream(c10_stream);
+
+    dpct::has_capability_or_fail(
+        queue.get_device(),
+        {sycl::aspect::fp64});
+    queue.submit([&](sycl::handler &cgh) {
+          auto p_ct0 = *(filtered_lrelu_act_kernel_params *)args[0];
+
+          cgh.parallel_for(
+              sycl::nd_range<3>(sycl::range<3>(gz, gy, gx) *
+                                    sycl::range<3>(1, 1, bx),
+                                sycl::range<3>(1, 1, bx)),
+              [=](sycl::nd_item<3> item_ct1)
+                  [[intel::reqd_sub_group_size(32)]] {
+                    filtered_lrelu_act_kernel<T, signWrite, signRead>(p_ct0,
+                                                                      item_ct1);
+                  });
+        }).wait();
+  }
+}
+catch (sycl::exception const &exc) {
+  std::cerr << exc.what() << "Exception caught at file:" << __FILE__
+            << ", line:" << __LINE__ << std::endl;
+  std::exit(1);
 }
 
 //------------------------------------------------------------------------

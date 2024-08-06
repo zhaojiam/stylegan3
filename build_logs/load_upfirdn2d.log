@@ -1,0 +1,201 @@
+No CUDA runtime is found, using CUDA_HOME='/usr/local/cuda-12.5'
+Setting up PyTorch plugin "upfirdn2d_plugin"...
+Using /export/users/zhaojiam/.cache/torch_extensions/py310_xpu as PyTorch extensions root...
+upfirdn2d_plugin /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630 ['/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630/upfirdn2d.cpp', '/export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp'] {}
+==================
+ /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx 
+==========================
+Emitting ninja build file /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630/build.ninja...
+Building extension module upfirdn2d_plugin...
+Allowing ninja to set a default number of workers... (overridable by setting the environment variable MAX_JOBS=N)
+[1/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF upfirdn2d.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630/upfirdn2d.cpp -o upfirdn2d.o 
+[2/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx -MMD -MF upfirdn2d.dp.o.d -DTORCH_EXTENSION_NAME=upfirdn2d_plugin -DTORCH_API_INCLUDE_EXTENSION_H -DPYBIND11_COMPILER_TYPE=\"_gcc\" -DPYBIND11_STDLIB=\"_libstdcpp\" -DPYBIND11_BUILD_ABI=\"_cxxabi1016\" -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/torch/csrc/api/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/include/TH -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include -isystem /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/linux/include/sycl -isystem /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/include -isystem /export/users/zhaojiam/pkg/miniforge3/envs/st3/include/python3.10 -D_GLIBCXX_USE_CXX11_ABI=1 -fPIC -std=c++17 -fsycl -c /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp -o upfirdn2d.dp.o 
+In file included from /export/users/zhaojiam/.cache/torch_extensions/py310_xpu/upfirdn2d_plugin/87ab6021d221e4f569d8653177b509bc-intel-r--uhd-graphics-630/upfirdn2d.dp.cpp:9:
+In file included from /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/compiler/../../include/sycl/sycl.hpp:11:
+In file included from /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/compiler/../../include/sycl/accessor.hpp:12:
+In file included from /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/compiler/../../include/sycl/aliases.hpp:12:
+In file included from /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/compiler/../../include/sycl/half_type.hpp:14:
+In file included from /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/compiler/../../include/sycl/detail/vector_traits.hpp:11:
+In file included from /rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/algorithm:71:
+In file included from /rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/pstl/glue_algorithm_defs.h:13:
+In file included from /rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/functional:59:
+/rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/bits/std_function.h:298:7: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+  298 |       _M_invoke(const _Any_data& __functor, _ArgTypes&&... __args)
+      |       ^
+/rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/bits/std_function.h:298:7: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+/rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/bits/std_function.h:298:7: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+/rdrive/ref/gcc/9.4.0/ubt2204/efi2/lib/gcc/x86_64-linux-gnu/9.4.0/../../../../include/c++/9.4.0/bits/std_function.h:298:7: warning: loop not unrolled: the optimizer was unable to perform the requested transformation; the transformation might be disabled or specified as part of an unsupported transformation ordering [-Wpass-failed=transform-warning]
+4 warnings generated.
+[3/3] /export/users/zhaojiam/pkg/intel/oneapi/compiler/2024.1/bin/icpx upfirdn2d.o upfirdn2d.dp.o -shared -fsycl -lc10 -ltorch_cpu -ltorch -ltorch_python -L/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/torch/lib -L/export/users/zhaojiam/pkg/miniforge3/envs/st3/lib/python3.10/site-packages/intel_extension_for_pytorch/lib -Wl,--start-group /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_sycl.a /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_intel_ilp64.a /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_sequential.a /export/users/zhaojiam/pkg/intel/oneapi/mkl/2024.1/lib/intel64/libmkl_core.a -Wl,--end-group -lsycl -lOpenCL -lpthread -lm -ldl -lintel-ext-pt-gpu -o upfirdn2d_plugin.so
+Loading extension module upfirdn2d_plugin...
+Done setting up PyTorch plugin "upfirdn2d_plugin".
+tensor([[[[-4.4617e-02, -1.0875e-01, -4.0232e-01,  ...,  2.6535e-01,
+           -1.8022e-01,  1.3132e-01],
+          [-4.2932e-01, -1.8840e-01,  1.5572e-02,  ..., -3.2876e-01,
+           -1.5593e-02, -2.6650e-01],
+          [ 1.0553e-01, -9.9700e-02,  2.3375e-01,  ...,  2.5025e-01,
+           -5.3692e-02, -3.1746e-01],
+          ...,
+          [ 3.1543e-01, -2.5516e-01,  2.0721e-03,  ..., -9.7823e-02,
+           -2.1613e-01,  6.9114e-01],
+          [ 3.1379e-02, -1.0345e-01, -5.1322e-01,  ...,  2.9015e-01,
+           -4.3000e-01, -1.6659e-01],
+          [ 8.4794e-02,  4.1012e-02, -1.9445e-01,  ..., -2.3930e-01,
+           -1.2715e-01,  1.4264e-01]],
+
+         [[ 2.2902e-01,  1.0477e-01, -1.3592e-01,  ..., -2.4966e-02,
+            1.7266e-01, -8.6088e-02],
+          [-2.1559e-01, -5.5980e-02,  3.0504e-01,  ..., -2.6845e-01,
+            1.3272e-02, -1.5212e-01],
+          [-1.1178e-01, -1.4153e-01,  6.0795e-02,  ..., -1.4878e-01,
+            1.0351e-01,  7.8999e-02],
+          ...,
+          [ 1.3177e-01, -1.3828e-01,  2.2975e-01,  ...,  4.3635e-01,
+           -2.4546e-01, -7.1168e-04],
+          [-1.5995e-01,  3.7217e-02, -4.6650e-02,  ..., -2.0717e-01,
+           -3.1665e-01, -8.5780e-01],
+          [-2.3705e-01, -1.1379e-01,  2.7984e-01,  ..., -3.0576e-01,
+            3.4132e-01,  6.2850e-01]],
+
+         [[-1.6417e-01, -1.0050e-01, -2.2547e-01,  ..., -5.4495e-02,
+            3.8818e-01, -2.3018e-01],
+          [-9.9914e-02, -1.9772e-01, -1.3949e-01,  ..., -4.2978e-01,
+            9.4136e-02, -5.4165e-03],
+          [ 1.3831e-01,  1.3807e-01,  3.5126e-01,  ..., -1.6827e-01,
+            3.2212e-02, -9.3518e-02],
+          ...,
+          [-1.0559e-01, -2.2109e-01,  1.7007e-01,  ...,  1.4754e-01,
+           -5.3934e-02,  3.3316e-02],
+          [-9.5742e-02, -9.6816e-02, -1.5637e-01,  ..., -4.2519e-01,
+            2.5963e-02,  5.7762e-02],
+          [ 1.2190e-01, -1.1594e-01, -3.5923e-01,  ..., -1.1710e-01,
+            1.6930e-01, -4.3915e-01]]],
+
+
+        [[[-2.1018e-01,  1.3559e-01,  1.4627e-02,  ...,  1.1550e-01,
+           -1.1273e-01, -2.0566e-02],
+          [-3.7633e-02,  4.0221e-01,  4.3561e-01,  ...,  5.5193e-01,
+            7.9077e-02,  5.7565e-02],
+          [ 2.2316e-01, -2.6244e-01, -6.4778e-01,  ...,  2.5056e-01,
+           -3.8587e-01,  1.9172e-01],
+          ...,
+          [-1.1265e-01, -3.6332e-02,  5.8804e-01,  ..., -2.7016e-02,
+            2.6507e-02,  6.5858e-02],
+          [ 1.4173e-02, -2.6917e-01,  5.3076e-02,  ...,  1.4752e-01,
+            2.6909e-01,  7.3229e-02],
+          [-7.1424e-02, -5.4051e-02,  1.0489e-02,  ..., -2.7699e-01,
+           -2.1273e-01, -2.1010e-01]],
+
+         [[ 3.5548e-01, -3.1757e-01, -1.0887e-01,  ..., -1.4007e-01,
+            2.3413e-01,  2.8606e-01],
+          [ 2.0071e-01, -1.8244e-01,  6.6957e-01,  ...,  1.5564e-01,
+           -1.4006e-01, -2.8900e-01],
+          [-1.6527e-01,  1.5031e-01, -2.8133e-01,  ..., -2.0659e-01,
+           -2.7558e-02, -1.0010e-01],
+          ...,
+          [ 1.1853e-01, -4.6489e-01, -2.8227e-01,  ...,  1.6432e-01,
+            3.0589e-01,  4.4641e-01],
+          [-2.8199e-03,  1.3743e-02,  9.7888e-04,  ...,  1.0610e-01,
+            1.5580e-01, -1.5861e-01],
+          [-1.2459e-02,  5.1081e-01,  5.6579e-03,  ...,  2.4465e-01,
+            1.2129e-02, -8.2130e-02]],
+
+         [[ 1.9289e-01,  1.9553e-03,  4.2244e-01,  ...,  1.8350e-01,
+            2.3775e-01,  1.0171e-01],
+          [ 4.6669e-01,  1.3436e-01, -2.9643e-01,  ..., -1.3816e-02,
+           -1.1421e-01, -5.1954e-01],
+          [ 6.5548e-01, -5.6097e-02,  3.0410e-01,  ..., -1.5151e-01,
+            3.8067e-01,  1.1411e-01],
+          ...,
+          [ 2.8604e-01, -1.0032e-01, -1.4687e-01,  ...,  6.7100e-02,
+           -7.6234e-02,  1.6660e-01],
+          [ 2.9029e-02,  7.4785e-02, -3.3699e-01,  ..., -7.5831e-02,
+            1.2154e-03, -1.0136e-01],
+          [ 1.3023e-01,  2.2323e-01,  4.3808e-01,  ...,  8.9508e-02,
+           -4.2863e-01,  8.2525e-02]]],
+
+
+        [[[-2.7321e-01, -1.8490e-01,  2.3050e-01,  ...,  1.6914e-01,
+           -2.0967e-01, -2.9094e-01],
+          [ 1.2386e-01, -2.8960e-01, -8.6781e-02,  ...,  1.2836e-01,
+           -3.9590e-02, -3.2476e-01],
+          [ 2.0027e-01,  2.1686e-01,  7.4381e-02,  ...,  5.5321e-02,
+            1.8546e-01, -5.3376e-02],
+          ...,
+          [ 5.6742e-01, -3.1116e-01, -3.7687e-01,  ..., -2.1774e-01,
+            9.8279e-02, -1.2723e-01],
+          [ 7.6858e-02, -1.2915e-01, -1.7471e-01,  ...,  8.3725e-03,
+           -1.1449e-01,  7.9668e-02],
+          [ 8.9792e-02,  8.6809e-02,  1.7029e-01,  ...,  2.9929e-01,
+            6.0487e-02,  6.7293e-02]],
+
+         [[-3.1744e-01, -4.2279e-02,  1.4164e-01,  ...,  4.9158e-02,
+            4.6112e-01, -4.9019e-01],
+          [ 1.0893e-02, -1.3622e-01,  3.6349e-01,  ...,  2.5927e-01,
+           -2.7139e-01, -5.4196e-02],
+          [-3.4160e-01, -1.0997e-01,  8.1148e-02,  ...,  2.5512e-01,
+           -7.2073e-02,  5.8968e-02],
+          ...,
+          [-1.6582e-01, -1.1534e-01, -5.3735e-02,  ..., -1.2777e-01,
+           -1.1497e-01, -3.0295e-03],
+          [ 3.4856e-01, -5.5429e-01, -6.7522e-04,  ...,  1.3578e-01,
+           -2.0021e-03, -1.3524e-01],
+          [-9.6495e-02,  2.9279e-02,  1.3461e-01,  ..., -1.9573e-01,
+            4.1716e-02, -5.7892e-02]],
+
+         [[ 2.3351e-01, -2.5923e-01,  1.2535e-02,  ..., -1.3724e-01,
+            2.2151e-01,  7.4564e-02],
+          [-3.7283e-02, -9.1269e-02, -1.9909e-01,  ...,  5.5246e-01,
+            2.7615e-01,  1.3863e-02],
+          [ 4.5137e-02, -2.0351e-01, -2.6669e-01,  ..., -1.6694e-01,
+            4.1821e-02, -5.4131e-01],
+          ...,
+          [ 3.5043e-01,  2.6585e-01,  4.0744e-02,  ...,  2.4254e-01,
+            2.1880e-01,  9.6492e-02],
+          [-3.6851e-01,  2.7946e-01, -1.3456e-01,  ...,  3.5570e-01,
+            4.1060e-01,  3.9143e-01],
+          [ 5.7687e-02,  2.4019e-02, -1.0178e-01,  ...,  1.1968e-01,
+            2.8485e-01, -4.2626e-01]]],
+
+
+        [[[-1.6736e-01,  1.2053e-02,  4.3910e-01,  ..., -3.9039e-01,
+            2.4719e-02,  5.1260e-01],
+          [ 1.7637e-01,  1.7251e-01, -4.1607e-01,  ..., -3.0559e-01,
+            3.0128e-01, -4.3935e-01],
+          [-6.8495e-02, -6.0090e-02,  2.3933e-01,  ..., -1.1618e-01,
+           -1.0359e-01, -3.4992e-01],
+          ...,
+          [-4.5124e-02,  2.1614e-02, -9.6351e-02,  ..., -3.4778e-01,
+           -6.5853e-01, -1.8986e-01],
+          [ 5.2233e-02, -1.6538e-01, -3.2378e-01,  ..., -8.7531e-02,
+            2.4271e-01,  1.7971e-02],
+          [ 4.2974e-01, -9.4796e-02,  1.6699e-01,  ...,  1.8498e-01,
+            1.3605e-01,  1.1279e-01]],
+
+         [[ 2.2208e-02,  2.3236e-01,  2.6695e-01,  ...,  1.6419e-01,
+            1.5480e-02,  5.8345e-01],
+          [ 1.2559e-01, -2.7111e-01,  4.0281e-01,  ...,  4.0360e-01,
+           -1.3579e-02,  2.0210e-01],
+          [ 2.1005e-01, -1.7029e-01, -1.2495e-02,  ...,  3.8157e-02,
+           -5.1396e-03, -6.0285e-01],
+          ...,
+          [-3.4747e-01,  9.1097e-02, -4.4275e-03,  ..., -3.6205e-01,
+            1.3896e-01,  2.4938e-01],
+          [-1.4843e-02,  8.6684e-02,  4.7082e-01,  ...,  8.3896e-02,
+           -8.2319e-03,  4.0489e-01],
+          [-2.6516e-01,  5.2366e-01,  3.3015e-03,  ...,  1.7387e-01,
+           -5.8675e-01,  3.3171e-01]],
+
+         [[ 1.4022e-01,  2.1314e-02,  8.9493e-02,  ..., -3.5421e-01,
+           -7.2821e-01, -1.3643e-01],
+          [ 3.6921e-02,  4.5846e-01, -8.6655e-02,  ...,  1.6839e-01,
+            1.9867e-01, -5.2846e-04],
+          [ 6.7652e-02,  1.2016e-01,  6.4087e-02,  ..., -3.4111e-01,
+            4.7740e-01,  5.1387e-01],
+          ...,
+          [-2.6907e-01,  3.3036e-01,  5.2716e-01,  ..., -2.0677e-03,
+            3.1030e-01,  8.2134e-02],
+          [ 1.3216e-01,  5.6684e-02, -5.3979e-01,  ..., -1.5813e-01,
+            3.2576e-01, -2.8006e-01],
+          [-2.7095e-01, -9.1345e-02, -1.7578e-01,  ...,  6.6884e-02,
+            2.5032e-01,  1.2721e-01]]]], device='xpu:0')
